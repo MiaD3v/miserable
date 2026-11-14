@@ -19,6 +19,7 @@ MS::MainScene::MainScene(SDL_Renderer *ren) :
     mPlayerArea(new MS::Layer),
     mBG(new MS::Layer),
     mBoxes(new MS::Layer),
+    mShop(new MS::Layer),
     mTestImage("assets/BG.png", ren),
     playerImageNeutral("assets/Player Sprites/Player Char-neutral.png", ren),
     backgroundImage("assets/Backgrounds/warehouse stage 3.png", ren),
@@ -27,6 +28,7 @@ MS::MainScene::MainScene(SDL_Renderer *ren) :
     {
     mBG->next = mBoxes;
     mBoxes->next = mPlayerArea;
+    mPlayerArea->next = mShop;
 
     mPlayerArea->rects = new MS::Rectangle;
     *mPlayerArea->rects = {
@@ -64,6 +66,34 @@ MS::MainScene::MainScene(SDL_Renderer *ren) :
         .w = 100, .h = 100,
         .r = 0x28, .g = 0x28, .b = 0x28, .a = 0xff,
         .image = &boxImage,
+    };
+
+    doll_button = new MS::Rectangle;
+    *doll_button = {
+        .x = 50, .y = 50,
+        .w = 100, .h = 100,
+        .r = 0x00, .g = 0xFF, .b = 0xFF, .a = 0x5F,
+        .image = &mTestImage,
+    };
+    mShop->rects = doll_button;
+
+    upgrade_button = new MS::Rectangle;
+    *upgrade_button = {
+        .x = 350, .y = 50,
+        .w = 100, .h = 100,
+        .r = 0x00, .g = 0xFF, .b = 0xFF, .a = 0x5F,
+        .image = &mTestImage,
+    };
+    mShop->rects->next = upgrade_button;
+
+    bottle_button = new MS::Rectangle;
+
+    *bottle_button = {
+
+        .x = 200, .y = 50,
+        .w = 100, .h = 100,
+        .r = 0x00, .g = 0xFF, .b = 0xFF, .a = 0x5F,
+        .image = &mTestImage,
     };
     mShop->rects->next->next = bottle_button;
 

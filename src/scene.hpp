@@ -1,16 +1,15 @@
 #include <SDL3/SDL.h>
 
 namespace Miserable {
+    typedef struct Layer Layer;
     class Scene {
         public:
             void* mRender_Tree;
-            
+
             explicit Scene();
-            virtual void* frame() = delete;
-            virtual void Key_Event(SDL_Event event) = delete;
-            virtual void Mouse_Event(SDL_Event event) = delete;
-            virtual void Resize() = delete;
+            virtual Layer* frame() = delete;
+            virtual void Resize(int w, int h) = delete;
             virtual ~Scene() = default;
-        
+
     };
 };

@@ -3,6 +3,7 @@
 #include "miserable.hpp"
 #include "panic.hpp"
 #include "deltatime.hpp"
+#include "scenes/main_scene.hpp"
 
 namespace MS = Miserable;
 
@@ -28,28 +29,20 @@ MS::Game::Game() {
 
 int MS::Game::run() {
 
+    MS::MainScene mainScene;
+
     SDL_Event event;
     bool running = true;
     while (running) {
         del.start_frame();
-        if (SDL_PollEvent(&event)) switch (event.type) {
-            case SDL_EVENT_QUIT: running = false; continue;
-            case SDL_EVENT_WINDOW_CLOSE_REQUESTED: running = false; continue;
+        while (SDL_PollEvent(&event)) {
+            switch (event.type) {
+                case SDL_EVENT_QUIT: running = false; break;
+                case SDL_EVENT_WINDOW_CLOSE_REQUESTED: running = false; break;
+            }
         }
 
-        MS::Rectangle testRect = {
-            .x = 0,
-            .y = 0,
-            .w = 50,
-            .h = 50,
-            .r = 0x28, .g = 0x28, .b = 0x28, .a = 255,
-        };
-
-        MS::Layer testLayer = {
-            .rects = &testRect,
-        };
-
-        mRendererEngine.render(&testLayer);
+        mRendererEngine.render(mainScene.frame());
 
     }
 

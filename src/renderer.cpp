@@ -1,5 +1,6 @@
 #include <print>
 #include <SDL3/SDL.h>
+#include <cassert>
 #include "renderer.hpp"
 
 #include "panic.hpp"
@@ -8,7 +9,7 @@
 namespace MS = Miserable;
 
 MS::Renderer::Renderer() {
-    
+    ;
 }
 
 MS::Renderer::Renderer(SDL_Window *win, SDL_Renderer *ren, int w, int h)
@@ -42,17 +43,21 @@ void MS::Renderer::render(MS::Layer *tree) {
                 .h = (float)rect->h,
             };
 
-            if (!rect->image) {
+            if (!rect->image && !rect->text) {
 
                 (void )SDL_SetRenderDrawColor(
                     mRenderer,
                     rect->r, rect->g, rect->b, rect->a);
                 (void) SDL_RenderFillRect(mRenderer, &SDLRect);
 
-            } else {
+            } else if (rect->image) {
 
                 (void) SDL_RenderTexture(mRenderer, rect->image->mTexture, nullptr, &SDLRect);
 
+            } else {
+                assert(rect->text);
+                (void) TTF_SetTextColor(rect->text, rect->r, rect->g, rect->b, rect->a);
+                (void) TTF_DrawRendererText(rect->text, rect->x, rect->y);
             }
         }
     }

@@ -1,4 +1,6 @@
 #include <SDL3/SDL.h>
+#include <SDL3_ttf/SDL_ttf.h>
+
 
 namespace Miserable {
     typedef struct Rectangle Rectangle;
@@ -9,11 +11,13 @@ namespace Miserable {
     } Layer;
 
     class Image;
+    // You can _either_ have 'image', a color, or 'text';
     typedef struct Rectangle {
         double x,y,w,h;
         int r,g,b,a;
         Miserable::Image *image    = nullptr;
         Miserable::Rectangle *next = nullptr;
+        TTF_Text *text             = nullptr;
     } Rectangle;
 
     class Renderer {

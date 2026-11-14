@@ -6,10 +6,11 @@
 
 namespace MS = Miserable;
 
-MS::MainScene::MainScene(SDL_Renderer *ren) : mPlayerArea(new MS::Layer), mBG(new MS::Layer), mBoxes(new MS::Layer), mTestImage("assets/BG.png", ren) 
+MS::MainScene::MainScene(SDL_Renderer *ren) : mPlayerArea(new MS::Layer), mBG(new MS::Layer), mBoxes(new MS::Layer), mShop(new MS::Layer), mTestImage("assets/BG.png", ren) 
     {
     mBG->next = mBoxes;
     mBoxes->next = mPlayerArea;
+    mPlayerArea->next = mShop;
     
     mPlayerArea->rects = new MS::Rectangle;
     *mPlayerArea->rects = {
@@ -48,12 +49,44 @@ MS::MainScene::MainScene(SDL_Renderer *ren) : mPlayerArea(new MS::Layer), mBG(ne
         .r = 0x28, .g = 0x28, .b = 0x28, .a = 0xff,
         .image = &mTestImage,
     };
+
+
+    doll_button = new MS::Rectangle;
+    *doll_button = {
+        .x = 50, .y = 50,
+        .w = 100, .h = 100,
+        .r = 0x00, .g = 0xFF, .b = 0xFF, .a = 0x5F,
+        .image = &mTestImage,
+    };
+    mShop->rects = doll_button;
+
+    upgrade_button = new MS::Rectangle;
+    *upgrade_button = {
+        .x = 350, .y = 50,
+        .w = 100, .h = 100,
+        .r = 0x00, .g = 0xFF, .b = 0xFF, .a = 0x5F,
+        .image = &mTestImage,
+    };
+    mShop->rects->next = upgrade_button;
+
+    bottle_button = new MS::Rectangle;
+    *bottle_button = {
+        .x = 200, .y = 50,
+        .w = 100, .h = 100,
+        .r = 0x00, .g = 0xFF, .b = 0xFF, .a = 0x5F,
+        .image = &mTestImage,
+    };
+    mShop->rects->next->next = bottle_button;
+
     mPlayerArea->rects->next->x = (mPlayerArea->rects->w * (1 - player.x)) + mPlayerArea->rects->x;
 }
 
 MS::Layer *MS::MainScene::frame() {
     int numKeys = 0;
+    float msX = -1;
+    float msY = -1;
     const bool *kbState = SDL_GetKeyboardState(&numKeys);
+    const SDL_MouseButtonFlags msState = SDL_GetMouseState(&msX, &msY);
 
     if (kbState[SDL_SCANCODE_A]) {
         player.x += MS::dt;
@@ -67,6 +100,21 @@ MS::Layer *MS::MainScene::frame() {
         mPlayerArea->rects->next->x = (mPlayerArea->rects->w * (1 - player.x)) + mPlayerArea->rects->x;
     }
 
+    if (msState == SDL_BUTTON_LEFT && !held_down){
+        if(IsRectClicked(msX, msY, doll_button)){
+            std::print(stderr, "doll");
+        }
+        if(IsRectClicked(msX, msY, bottle_button)){
+            std::print(stderr, "bottle");
+        }
+        if(IsRectClicked(msX, msY, upgrade_button)){
+            std::print(stderr, "upgrade");
+        }
+        held_down = true;
+    }
+    if (!msState){
+        held_down = false;
+    }
 
     return mBG;
 }
@@ -75,9 +123,14 @@ void MS::MainScene::Resize(int w, int h) {
 
 }
 
+bool MS::MainScene::IsRectClicked(float msX, float msY, MS::Rectangle *button){
+    return msX > button->x && msX < button->x + button->w && msY > button->y && msY < button->y + button->h;
+}
+
 MS::MainScene::~MainScene() {
     delete mPlayerArea;
     delete mBG;
     delete mBoxes;
-}
+    delete mShop;
+}   
 

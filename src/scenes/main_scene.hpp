@@ -13,8 +13,13 @@ namespace Miserable {
             void Resize(int w, int h);
             ~MainScene();
         private:
+            Layer *mPlayerArea = nullptr;
             Image mTestImage;
             Layer *mBG = nullptr;
+            Layer *mBoxes = nullptr;
+            Layer *mDolly = nullptr;
+
+            double mLoadOffset = 112;
             struct {
                 // All of these are 0 - 1;
                 float x = 0.f;

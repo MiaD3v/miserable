@@ -6,18 +6,58 @@
 
 namespace MS = Miserable;
 
-MS::MainScene::MainScene(SDL_Renderer *ren)
-    : mBG(new MS::Layer)
-    , mTestImage("assets/test.png", ren) {
+MS::MainScene::MainScene(SDL_Renderer *ren) : mPlayerArea(new MS::Layer), mBG(new MS::Layer), mBoxes(new MS::Layer), mDolly(new MS::Layer), mTestImage("assets/BG.png", ren) 
+    {
+    mBG->next = mBoxes;
+    mBoxes->next = mPlayerArea;
+    mPlayerArea->next = mDolly;
+    
+    mPlayerArea->rects = new MS::Rectangle;
+    *mPlayerArea->rects = {
+        .x = mLoadOffset, .y = 400,
+        .w = 350, .h = 100,
+        .r = 0x28, .g = 0x28, .b = 0x28, .a = 0xff,
+        .image = &mTestImage,
+    };
+    mPlayerArea->rects->next = new MS::Rectangle;
+    *mPlayerArea->rects->next = {
+        .x = 300+mLoadOffset, .y = 400,
+        .w = 50, .h = 50,
+        .r = 0xFF, .g = 0xFF, .b = 0xFF, .a = 0xff,
+        .image = &mTestImage,
+    };
 
     mBG->rects = new MS::Rectangle;
     *mBG->rects = {
         .x = 0, .y = 0,
-        .w = 50, .h = 50,
+        .w = 512, .h = 512,
         .r = 0x28, .g = 0x28, .b = 0x28, .a = 0xff,
         .image = &mTestImage,
     };
 
+    mBoxes->rects = new MS::Rectangle;
+    *mBoxes->rects = {
+        .x = 50, .y = 250,
+        .w = 100, .h = 100,
+        .r = 0x28, .g = 0x28, .b = 0x28, .a = 0xff,
+        .image = &mTestImage,
+    };
+    mBoxes->rects->next = new MS::Rectangle;
+    *mBoxes->rects->next = {
+        .x = 450, .y = 250,
+        .w = 100, .h = 100,
+        .r = 0x28, .g = 0x28, .b = 0x28, .a = 0xff,
+        .image = &mTestImage,
+    };
+
+    mDolly->rects = new MS::Rectangle;
+    *mDolly->rects = {
+        .x = 250+mLoadOffset, .y = 400,
+        .w = 50, .h = 50,
+        .r = 0x28, .g = 0x28, .b = 0x28, .a = 0xff,
+        .image = &mTestImage,
+    };
+    mPlayerArea->rects->next->x = (mPlayerArea->rects->w * (1 - player.x)) + mPlayerArea->rects->x;
 }
 
 MS::Layer *MS::MainScene::frame() {
@@ -25,11 +65,15 @@ MS::Layer *MS::MainScene::frame() {
     const bool *kbState = SDL_GetKeyboardState(&numKeys);
 
     if (kbState[SDL_SCANCODE_A]) {
-        mBG->rects->x -= MS::dt * 1500;
+        player.x += MS::dt;
+        if (player.x > 1) player.x = 1;
+        mPlayerArea->rects->next->x = (mPlayerArea->rects->w * (1 - player.x)) + mPlayerArea->rects->x;
     }
 
     if (kbState[SDL_SCANCODE_D]) {
-        mBG->rects->x += MS::dt * 1500;
+        player.x -= MS::dt;
+        if (player.x < 0) player.x = 0;
+        mPlayerArea->rects->next->x = (mPlayerArea->rects->w * (1 - player.x)) + mPlayerArea->rects->x;
     }
 
 
@@ -37,7 +81,7 @@ MS::Layer *MS::MainScene::frame() {
 }
 
 void MS::MainScene::Resize(int w, int h) {
-    ;
+
 }
 
 MS::MainScene::~MainScene() {

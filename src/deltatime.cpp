@@ -1,19 +1,18 @@
+#include <cstdint>
+#include <SDL3/SDL.h>
 #include "deltatime.hpp"
 
-Miserable::DeltaTime::DeltaTime() {
-    deltatime = 0.0;
-    last_frame_start = 0;
-}
-void Miserable::DeltaTime::start_frame() {
-    uint64_t time_now = SDL_GetTicksNS();
-    if(!last_frame_start)
-        return;
-    uint64_t nano_delta = time_now - last_frame_start;
-    uint64_t last_frame_start = time_now;
+namespace MS = Miserable;
 
-    deltatime = nano_delta / 1.0e9;
+float MS::dt = 0.;
+
+static uint64_t last_frame_start = 0;
+
+void MS::updateDeltaTime() {
+    uint64_t time_now = SDL_GetTicksNS();
+    uint64_t nano_delta = time_now - last_frame_start;
+    last_frame_start = time_now;
+
+    MS::dt = nano_delta / 1.0e9;
 }
-double Miserable::DeltaTime::get_delta_time() {
-    return deltatime;
-}
-Miserable::DeltaTime del;
+

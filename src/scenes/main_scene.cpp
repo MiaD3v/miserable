@@ -1,6 +1,7 @@
 #include "../renderer.hpp"
 #include "main_scene.hpp"
 #include <print>
+#include "../deltatime.hpp"
 
 namespace MS = Miserable;
 
@@ -18,13 +19,11 @@ MS::Layer *MS::MainScene::frame() {
     const bool *kbState = SDL_GetKeyboardState(&numKeys);
 
     if (kbState[SDL_SCANCODE_A]) {
-        std::print(stderr, "A\n");
-        --mBG->rects->x;
+        mBG->rects->x -= MS::dt * 1500;
     }
 
     if (kbState[SDL_SCANCODE_D]) {
-        std::print(stderr, "D\n");
-        ++mBG->rects->x;
+        mBG->rects->x += MS::dt * 1500;
     }
 
 

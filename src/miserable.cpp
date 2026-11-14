@@ -34,7 +34,7 @@ int MS::Game::run() {
     SDL_Event event;
     bool running = true;
     while (running) {
-        del.start_frame();
+        MS::updateDeltaTime();
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
                 case SDL_EVENT_QUIT: running = false; break;

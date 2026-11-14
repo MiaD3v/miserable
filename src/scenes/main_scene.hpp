@@ -13,6 +13,10 @@ namespace Miserable {
             void Resize(int w, int h);
             ~MainScene();
         private:
+
+            // 0 is empty, 1 is full!
+            float mBladderFilled = 0.f;
+
             Layer *mPlayerArea = nullptr;
             Image mTestImage;
             Image playerImageNeutral;
@@ -31,6 +35,7 @@ namespace Miserable {
                 float loadingProgress = -1.f, unloadingProgress = -1.f;
                 size_t nLoadingDolls = 0;
                 size_t nUnloadingDolls = 0;
+                int hp = 100;
             } player;
     };
 };

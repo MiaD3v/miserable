@@ -6,6 +6,15 @@
 
 namespace MS = Miserable;
 
+static bool decrementHealth(int &hp) {
+    hp--;
+    if (hp <= 0) {
+        hp = 0;
+        return true;
+    }
+    return false;
+}
+
 MS::MainScene::MainScene(SDL_Renderer *ren) : 
     mPlayerArea(new MS::Layer), 
     mBG(new MS::Layer), 
@@ -18,7 +27,7 @@ MS::MainScene::MainScene(SDL_Renderer *ren) :
     {
     mBG->next = mBoxes;
     mBoxes->next = mPlayerArea;
-    
+
     mPlayerArea->rects = new MS::Rectangle;
     *mPlayerArea->rects = {
         .x = mLoadOffset, .y = 400,
@@ -60,6 +69,16 @@ MS::MainScene::MainScene(SDL_Renderer *ren) :
 }
 
 MS::Layer *MS::MainScene::frame() {
+
+    mBladderFilled += MS::dt / 45;
+    while (mBladderFilled > 1 + 1.f/45) {
+        mBladderFilled -= (1.f / 45);
+        if (decrementHealth(player.hp)) {
+            std::print("YOU DIED!\n");
+        }
+        std::print(stderr, "hp: {}\n", player.hp);
+    }
+
     int numKeys = 0;
     const bool *kbState = SDL_GetKeyboardState(&numKeys);
 

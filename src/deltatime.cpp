@@ -2,7 +2,7 @@
 
 explicit Miserable::DeltaTime::DeltaTime() {
     deltatime = 0.0;
-
+    last_frame_start = 0;
 }
 Miserable::DeltaTime::start_frame() {
     uint64_t time_now = SDL_GetTicksNS();

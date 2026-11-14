@@ -6,11 +6,11 @@ namespace Miserable {
             void* mRender_Tree;
             
             explicit Scene();
-            virtual void* frame();
-            virtual void Key_Event(SDL_Event event);
-            virtual void Mouse_Event(SDL_Event event);
-            virtual void Resize();
-            virtual ~Scene();
+            virtual void* frame() = delete;
+            virtual void Key_Event(SDL_Event event) = delete;
+            virtual void Mouse_Event(SDL_Event event) = delete;
+            virtual void Resize() = delete;
+            virtual ~Scene() = {};
         
     };
 };

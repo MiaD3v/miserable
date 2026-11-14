@@ -1,16 +1,23 @@
 #include "../renderer.hpp"
 #include "main_scene.hpp"
 #include <print>
+#include <SDL3/SDL.h>
+#include "../deltatime.hpp"
 
 namespace MS = Miserable;
 
-MS::MainScene::MainScene() : mBG(new MS::Layer) {
+MS::MainScene::MainScene(SDL_Renderer *ren)
+    : mBG(new MS::Layer)
+    , mTestImage("assets/test.png", ren) {
+
     mBG->rects = new MS::Rectangle;
     *mBG->rects = {
         .x = 0, .y = 0,
         .w = 50, .h = 50,
         .r = 0x28, .g = 0x28, .b = 0x28, .a = 0xff,
+        .image = &mTestImage,
     };
+
 }
 
 MS::Layer *MS::MainScene::frame() {
@@ -18,13 +25,11 @@ MS::Layer *MS::MainScene::frame() {
     const bool *kbState = SDL_GetKeyboardState(&numKeys);
 
     if (kbState[SDL_SCANCODE_A]) {
-        std::print(stderr, "A\n");
-        --mBG->rects->x;
+        mBG->rects->x -= MS::dt * 1500;
     }
 
     if (kbState[SDL_SCANCODE_D]) {
-        std::print(stderr, "D\n");
-        ++mBG->rects->x;
+        mBG->rects->x += MS::dt * 1500;
     }
 
 

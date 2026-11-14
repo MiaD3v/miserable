@@ -29,12 +29,12 @@ MS::Game::Game() {
 
 int MS::Game::run() {
 
-    MS::MainScene mainScene;
+    MS::MainScene mainScene(mRenderer);
 
     SDL_Event event;
     bool running = true;
     while (running) {
-        del.start_frame();
+        MS::updateDeltaTime();
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
                 case SDL_EVENT_QUIT: running = false; break;

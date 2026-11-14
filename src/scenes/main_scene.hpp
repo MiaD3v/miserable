@@ -15,6 +15,11 @@ namespace Miserable {
         private:
             Layer *mPlayerArea = nullptr;
             Image mTestImage;
+            Image playerImageNeutral;
+            Image backgroundImage;
+            Image dollyImage;
+            Image boxImage;
+            
             Layer *mBG = nullptr;
             Layer *mBoxes = nullptr;
 

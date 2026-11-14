@@ -26,6 +26,11 @@ MS::MainScene::MainScene(SDL_Renderer *ren) :
     dollyImage("assets/programmer_art/dolly_prog_art.png", ren),
     boxImage("assets/programmer_art/box_prog_art.png", ren)
     {
+
+    // mTtfEngine = TTF_CreateRendererTextEngine(ren);
+    // mFont = TTF_OpenFont("assets/lazy_arie.ttf", 24.0);
+    // mTtfText = TTF_CreateText(mTtfEngine, mFont, "Test Text", sizeof("Test Text") - 1);
+
     mBG->next = mBoxes;
     mBoxes->next = mPlayerArea;
     mPlayerArea->next = mShop;
@@ -107,6 +112,12 @@ MS::MainScene::MainScene(SDL_Renderer *ren) :
     mShop->rects->next->next->next = load_doll_button;
 
     mPlayerArea->rects->next->x = (mPlayerArea->rects->w * (1 - player.x)) + mPlayerArea->rects->x;
+    // mPlayerArea->rects->next->image = nullptr;
+    // mPlayerArea->rects->next->r = 0x28;
+    // mPlayerArea->rects->next->g = 0x28;
+    // mPlayerArea->rects->next->b = 0x28;
+    // mPlayerArea->rects->next->a = 0xff;
+    // mPlayerArea->rects->next->text = mTtfText;
 }
 
 MS::Layer *MS::MainScene::frame() {
@@ -185,6 +196,11 @@ bool MS::MainScene::IsRectClicked(float msX, float msY, MS::Rectangle *button){
 }
 
 MS::MainScene::~MainScene() {
+
+    // TTF_CloseFont(mFont);
+    // TTF_DestroyText(mTtfText);
+    // TTF_DestroyRendererTextEngine(mTtfEngine);
+
     delete mPlayerArea;
     delete mBG;
     delete mBoxes;

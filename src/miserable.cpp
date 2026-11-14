@@ -14,6 +14,7 @@ constexpr int HEIGHT = 512;
 
 MS::Game::Game() {
     if (!SDL_Init(SDL_INIT_VIDEO)) PANIC("Failed to initialize SDL3!");
+    if (!TTF_Init()) PANIC("Failed to initialize SDL3_ttf!");
 
     if (!SDL_CreateWindowAndRenderer(WINDOW_NAME,
                                      WIDTH, HEIGHT,

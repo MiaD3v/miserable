@@ -23,6 +23,14 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(SDL3_image)
 
+FetchContent_Declare(
+    SDL3_ttf
+    GIT_REPOSITORY "https://github.com/libsdl-org/SDL_ttf.git"
+    GIT_TAG "release-3.2.2"
+    GIT_SHALLOW YES
+)
+FetchContent_MakeAvailable(SDL3_ttf)
+
 add_executable(${PROJECT_NAME}
     src/main.cpp
     src/miserable.cpp
@@ -34,4 +42,5 @@ add_executable(${PROJECT_NAME}
 )
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL3::SDL3)
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL3_image::SDL3_image)
+target_link_libraries(${PROJECT_NAME} PRIVATE SDL3_ttf::SDL3_ttf)
 

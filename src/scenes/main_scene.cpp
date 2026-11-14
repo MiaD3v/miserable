@@ -15,11 +15,11 @@ static bool decrementHealth(int &hp) {
     return false;
 }
 
-MS::MainScene::MainScene(SDL_Renderer *ren) : 
-    mPlayerArea(new MS::Layer), 
-    mBG(new MS::Layer), 
-    mBoxes(new MS::Layer), 
-    mTestImage("assets/BG.png", ren), 
+MS::MainScene::MainScene(SDL_Renderer *ren) :
+    mPlayerArea(new MS::Layer),
+    mBG(new MS::Layer),
+    mBoxes(new MS::Layer),
+    mTestImage("assets/BG.png", ren),
     playerImageNeutral("assets/Player Sprites/Player Char-neutral.png", ren),
     backgroundImage("assets/Backgrounds/warehouse stage 3.png", ren),
     dollyImage("assets/programmer_art/dolly_prog_art.png", ren),

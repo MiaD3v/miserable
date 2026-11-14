@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.10)
 
 project(miserable)
 
+set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-fno-exceptions")
+set(CMAKE_CXX_STANDARD "26")
+
 include(FetchContent)
 
 FetchContent_Declare(
@@ -12,6 +15,6 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(SDL3)
 
-add_executable(${PROJECT_NAME} src/main.cpp)
+add_executable(${PROJECT_NAME} src/main.cpp src/miserable.cpp)
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL3)
 

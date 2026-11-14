@@ -12,38 +12,44 @@ constexpr int HEIGHT = 512;
 
 MS::Game::Game() {
     if (!SDL_Init(SDL_INIT_VIDEO)) PANIC("Failed to initialize SDL3!");
-    mWindow =
-        SDL_CreateWindow(WINDOW_NAME, WIDTH, HEIGHT, SDL_WINDOW_RESIZABLE);
+
     if (!SDL_CreateWindowAndRenderer(WINDOW_NAME,
                                      WIDTH, HEIGHT,
                                      SDL_WINDOW_RESIZABLE,
                                      &mWindow, &mRenderer))
         PANIC("Failed to create window and renderer!");
-    SDL_FRect rect = {
-        .x = 0,
-        .y = 0,
-        .w = 500,
-        .h = 500,
-    };
-    if (!SDL_RenderClear(mRenderer)) PANIC("Failed to clear!");
-    if (!SDL_RenderPresent(mRenderer))
-        PANIC("Failed to present rendered image!");
+
+    mRendererEngine = MS::Renderer(mWindow, mRenderer, WIDTH, HEIGHT);
+
+    mRendererEngine.render(nullptr);
+
 }
 
 int MS::Game::run() {
 
     SDL_Event event;
-    for (;;) {
+    bool running = true;
+    while (running) {
         if (SDL_PollEvent(&event)) switch (event.type) {
-            case SDL_EVENT_QUIT: goto break_outer;
-            case SDL_EVENT_WINDOW_CLOSE_REQUESTED: goto break_outer;
+            case SDL_EVENT_QUIT: running = false; continue;
+            case SDL_EVENT_WINDOW_CLOSE_REQUESTED: running = false; continue;
         }
 
-        if (!SDL_RenderClear(mRenderer)) PANIC("Failed to clear!");
-        if (!SDL_RenderPresent(mRenderer))
-            PANIC("Failed to present rendered image!");
+        MS::Rectangle testRect = {
+            .x = 0,
+            .y = 0,
+            .w = 50,
+            .h = 50,
+            .r = 0x28, .g = 0x28, .b = 0x28, .a = 255,
+        };
+
+        MS::Layer testLayer = {
+            .rects = &testRect,
+        };
+
+        mRendererEngine.render(&testLayer);
+
     }
-break_outer:
 
     return 0;
 }

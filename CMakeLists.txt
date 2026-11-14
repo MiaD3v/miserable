@@ -15,6 +15,6 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(SDL3)
 
-add_executable(${PROJECT_NAME} src/main.cpp src/miserable.cpp)
+add_executable(${PROJECT_NAME} src/main.cpp src/miserable.cpp src/renderer.cpp)
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL3)
 

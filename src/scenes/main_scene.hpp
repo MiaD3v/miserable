@@ -14,8 +14,17 @@ namespace Miserable {
             bool IsRectClicked(float msX, float msY, Rectangle *button);
             ~MainScene();
         private:
+
+            // 0 is empty, 1 is full!
+            float mBladderFilled = 0.f;
+
             Layer *mPlayerArea = nullptr;
             Image mTestImage;
+            Image playerImageNeutral;
+            Image backgroundImage;
+            Image dollyImage;
+            Image boxImage;
+            
             Layer *mBG = nullptr;
             Layer *mBoxes = nullptr;
             Layer *mShop = nullptr;
@@ -32,6 +41,7 @@ namespace Miserable {
                 float loadingProgress = -1.f, unloadingProgress = -1.f;
                 size_t nLoadingDolls = 0;
                 size_t nUnloadingDolls = 0;
+                int hp = 100;
             } player;
     };
 };

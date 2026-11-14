@@ -6,10 +6,38 @@
 
 namespace MS = Miserable;
 
-MS::MainScene::MainScene(SDL_Renderer *ren) : mPlayerArea(new MS::Layer), mBG(new MS::Layer), mBoxes(new MS::Layer), mShop(new MS::Layer), mTestImage("assets/BG.png", ren) 
+static bool decrementHealth(int &hp) {
+    hp--;
+    if (hp <= 0) {
+        hp = 0;
+        return true;
+    }
+    return false;
+}
+
+MS::MainScene::MainScene(SDL_Renderer *ren) : 
+    mPlayerArea(new MS::Layer), 
+    mBG(new MS::Layer), 
+    mBoxes(new MS::Layer), 
+    mTestImage("assets/BG.png", ren), 
+    playerImageNeutral("assets/Player Sprites/Player Char-neutral.png", ren),
+    backgroundImage("assets/Backgrounds/warehouse stage 3.png", ren),
+    dollyImage("assets/programmer_art/dolly_prog_art.png", ren),
+    boxImage("assets/programmer_art/box_prog_art.png", ren)
     {
+MS::MainScene::MainScene(SDL_Renderer *ren) : 
+    mPlayerArea(new MS::Layer), 
+    mBG(new MS::Layer), 
+    mBoxes(new MS::Layer), 
+    mShop(new MS::Layer),
+    mTestImage("assets/BG.png", ren), 
+    playerImageNeutral("assets/Player Sprites/Player Char-neutral.png", ren),
+    backgroundImage("assets/Backgrounds/warehouse stage 3.png", ren),
+    dollyImage("assets/programmer_art/dolly_prog_art.png", ren),
+    boxImage("assets/programmer_art/box_prog_art.png", ren) {
     mBG->next = mBoxes;
     mBoxes->next = mPlayerArea;
+
     mPlayerArea->next = mShop;
     
     mPlayerArea->rects = new MS::Rectangle;
@@ -17,14 +45,16 @@ MS::MainScene::MainScene(SDL_Renderer *ren) : mPlayerArea(new MS::Layer), mBG(ne
         .x = mLoadOffset, .y = 400,
         .w = 350, .h = 100,
         .r = 0x28, .g = 0x28, .b = 0x28, .a = 0xff,
-        .image = &mTestImage,
+        .image = &dollyImage,
+        .image = &dollyImage,
     };
     mPlayerArea->rects->next = new MS::Rectangle;
     *mPlayerArea->rects->next = {
         .x = 300+mLoadOffset, .y = 400,
         .w = 50, .h = 50,
         .r = 0xFF, .g = 0xFF, .b = 0xFF, .a = 0xff,
-        .image = &mTestImage,
+        .image = &playerImageNeutral,
+        .image = &playerImageNeutral,
     };
 
     mBG->rects = new MS::Rectangle;
@@ -32,7 +62,8 @@ MS::MainScene::MainScene(SDL_Renderer *ren) : mPlayerArea(new MS::Layer), mBG(ne
         .x = 0, .y = 0,
         .w = 512, .h = 512,
         .r = 0x28, .g = 0x28, .b = 0x28, .a = 0xff,
-        .image = &mTestImage,
+        .image = &backgroundImage,
+        .image = &backgroundImage,
     };
 
     mBoxes->rects = new MS::Rectangle;
@@ -40,14 +71,16 @@ MS::MainScene::MainScene(SDL_Renderer *ren) : mPlayerArea(new MS::Layer), mBG(ne
         .x = 50, .y = 250,
         .w = 100, .h = 100,
         .r = 0x28, .g = 0x28, .b = 0x28, .a = 0xff,
-        .image = &mTestImage,
+        .image = &boxImage,
+        .image = &boxImage,
     };
     mBoxes->rects->next = new MS::Rectangle;
     *mBoxes->rects->next = {
         .x = 450, .y = 250,
         .w = 100, .h = 100,
         .r = 0x28, .g = 0x28, .b = 0x28, .a = 0xff,
-        .image = &mTestImage,
+        .image = &boxImage,
+        .image = &boxImage,
     };
 
 
@@ -82,6 +115,16 @@ MS::MainScene::MainScene(SDL_Renderer *ren) : mPlayerArea(new MS::Layer), mBG(ne
 }
 
 MS::Layer *MS::MainScene::frame() {
+
+    mBladderFilled += MS::dt / 45;
+    while (mBladderFilled > 1 + 1.f/45) {
+        mBladderFilled -= (1.f / 45);
+        if (decrementHealth(player.hp)) {
+            std::print("YOU DIED!\n");
+        }
+        std::print(stderr, "hp: {}\n", player.hp);
+    }
+
     int numKeys = 0;
     float msX = -1;
     float msY = -1;

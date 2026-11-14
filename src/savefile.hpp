@@ -2,7 +2,7 @@
 #include <utility>
 #include <print>
 
-#define ACHIEVEMENT_COUNT 3
+constexpr int ACHIEVEMENT_COUNT = 3;
 
 namespace Miserable {
     class SaveFile {
@@ -10,7 +10,6 @@ namespace Miserable {
         bool achievements[ACHIEVEMENT_COUNT];
         unsigned int name_len;
         char *name;
-        int id;
 
         public:
         SaveFile() = delete;

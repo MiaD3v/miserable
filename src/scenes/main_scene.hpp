@@ -1,15 +1,19 @@
 #include <cstddef>
 
+#include <SDL3/SDL.h>
+
 #include "../scene.hpp"
+#include "../image.hpp"
 
 namespace Miserable {
     class MainScene {
         public:
-            MainScene();
+            MainScene(SDL_Renderer *ren);
             Layer* frame();
             void Resize(int w, int h);
             ~MainScene();
         private:
+            Image mTestImage;
             Layer *mBG = nullptr;
             struct {
                 // All of these are 0 - 1;

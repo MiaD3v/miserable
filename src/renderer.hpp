@@ -8,10 +8,12 @@ namespace Miserable {
         Layer *next;
     } Layer;
 
+    class Image;
     typedef struct Rectangle {
         double x,y,w,h;
         int r,g,b,a;
-        Rectangle *next;
+        Miserable::Image *image    = nullptr;
+        Miserable::Rectangle *next = nullptr;
     } Rectangle;
 
     class Renderer {

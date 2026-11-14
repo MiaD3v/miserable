@@ -29,7 +29,7 @@ MS::Game::Game() {
 
 int MS::Game::run() {
 
-    MS::MainScene mainScene;
+    MS::MainScene mainScene(mRenderer);
 
     SDL_Event event;
     bool running = true;

@@ -15,6 +15,14 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(SDL3)
 
+FetchContent_Declare(
+    SDL3_image
+    GIT_REPOSITORY "https://github.com/libsdl-org/SDL_image.git"
+    GIT_TAG "release-3.4.8"
+    GIT_SHALLOW YES
+)
+FetchContent_MakeAvailable(SDL3_image)
+
 add_executable(${PROJECT_NAME}
     src/main.cpp
     src/miserable.cpp
@@ -22,6 +30,8 @@ add_executable(${PROJECT_NAME}
     src/scene.cpp
     src/scenes/main_scene.cpp
     src/deltatime.cpp
+    src/image.cpp
 )
-target_link_libraries(${PROJECT_NAME} PRIVATE SDL3)
+target_link_libraries(${PROJECT_NAME} PRIVATE SDL3::SDL3)
+target_link_libraries(${PROJECT_NAME} PRIVATE SDL3_image::SDL3_image)
 

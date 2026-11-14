@@ -3,6 +3,7 @@
 #include "renderer.hpp"
 
 #include "panic.hpp"
+#include "image.hpp"
 
 namespace MS = Miserable;
 
@@ -32,15 +33,26 @@ void MS::Renderer::render(MS::Layer *tree) {
         for (MS::Rectangle *rect = layer->rects;
              rect != nullptr;
              rect = rect->next) {
+
             SDL_FRect SDLRect = {
                 .x = (float)rect->x,
                 .y = (float)rect->y,
                 .w = (float)rect->w,
                 .h = (float)rect->h,
             };
-            SDL_SetRenderDrawColor(mRenderer,
-                                   rect->r, rect->g, rect->b, rect->a);
-            (void) SDL_RenderFillRect(mRenderer, &SDLRect);
+
+            if (!rect->image) {
+
+                (void )SDL_SetRenderDrawColor(
+                    mRenderer,
+                    rect->r, rect->g, rect->b, rect->a);
+                (void) SDL_RenderFillRect(mRenderer, &SDLRect);
+
+            } else {
+
+                (void) SDL_RenderTexture(mRenderer, rect->image->mTexture, nullptr, &SDLRect);
+
+            }
         }
     }
     SDL_RenderPresent(mRenderer);

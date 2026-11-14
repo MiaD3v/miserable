@@ -1,9 +1,8 @@
+#pragma once
 #include <cstdint>
-#include <SDL/SDL_timer.h>
+#include <SDL3/SDL.h>
 
 namespace Miserable {
-    DeltaTime del();
-
     class DeltaTime {
         double deltatime;
         uint64_t last_frame_start;
@@ -11,5 +10,7 @@ namespace Miserable {
         explicit DeltaTime();
         void start_frame();
         double get_delta_time();
-    }
+    };
+    
 }
+extern Miserable::DeltaTime del;

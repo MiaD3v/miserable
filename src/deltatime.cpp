@@ -1,10 +1,10 @@
 #include "deltatime.hpp"
 
-explicit Miserable::DeltaTime::DeltaTime() {
+Miserable::DeltaTime::DeltaTime() {
     deltatime = 0.0;
     last_frame_start = 0;
 }
-Miserable::DeltaTime::start_frame() {
+void Miserable::DeltaTime::start_frame() {
     uint64_t time_now = SDL_GetTicksNS();
     if(!last_frame_start)
         return;
@@ -16,3 +16,4 @@ Miserable::DeltaTime::start_frame() {
 double Miserable::DeltaTime::get_delta_time() {
     return deltatime;
 }
+Miserable::DeltaTime del;

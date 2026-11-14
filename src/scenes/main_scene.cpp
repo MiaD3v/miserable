@@ -6,11 +6,10 @@
 
 namespace MS = Miserable;
 
-MS::MainScene::MainScene(SDL_Renderer *ren) : mPlayerArea(new MS::Layer), mBG(new MS::Layer), mBoxes(new MS::Layer), mDolly(new MS::Layer), mTestImage("assets/BG.png", ren) 
+MS::MainScene::MainScene(SDL_Renderer *ren) : mPlayerArea(new MS::Layer), mBG(new MS::Layer), mBoxes(new MS::Layer), mTestImage("assets/BG.png", ren) 
     {
     mBG->next = mBoxes;
     mBoxes->next = mPlayerArea;
-    mPlayerArea->next = mDolly;
     
     mPlayerArea->rects = new MS::Rectangle;
     *mPlayerArea->rects = {
@@ -46,14 +45,6 @@ MS::MainScene::MainScene(SDL_Renderer *ren) : mPlayerArea(new MS::Layer), mBG(ne
     *mBoxes->rects->next = {
         .x = 450, .y = 250,
         .w = 100, .h = 100,
-        .r = 0x28, .g = 0x28, .b = 0x28, .a = 0xff,
-        .image = &mTestImage,
-    };
-
-    mDolly->rects = new MS::Rectangle;
-    *mDolly->rects = {
-        .x = 250+mLoadOffset, .y = 400,
-        .w = 50, .h = 50,
         .r = 0x28, .g = 0x28, .b = 0x28, .a = 0xff,
         .image = &mTestImage,
     };

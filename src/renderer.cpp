@@ -8,13 +8,14 @@
 namespace MS = Miserable;
 
 MS::Renderer::Renderer() {
+    
 }
 
 MS::Renderer::Renderer(SDL_Window *win, SDL_Renderer *ren, int w, int h)
     : mWindow(win), mRenderer(ren)
     , mW(w)
     , mH(h) {
-
+    SDL_SetRenderLogicalPresentation(mRenderer, 512, 512, SDL_LOGICAL_PRESENTATION_LETTERBOX);
     return;
 
 }

@@ -4,8 +4,8 @@ namespace Miserable {
     typedef struct Rectangle Rectangle;
     typedef struct Layer Layer;
     typedef struct Layer {
-        Rectangle *rects;
-        Layer *next;
+        Rectangle *rects = nullptr;
+        Layer *next = nullptr;
     } Layer;
 
     class Image;

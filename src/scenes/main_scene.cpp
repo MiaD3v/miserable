@@ -21,7 +21,7 @@ MS::MainScene::MainScene(SDL_Renderer *ren) :
     mBoxes(new MS::Layer),
     mShop(new MS::Layer),
     mTestImage("assets/BG.png", ren),
-    playerImageNeutral("assets/Player Sprites/Player Char-neutral.png", ren),
+    playerImageNeutral("assets/Player Sprites/Player Char-neutral-flipped.png", ren),
     backgroundImage("assets/Backgrounds/warehouse stage 3.png", ren),
     dollyImage("assets/programmer_art/dolly_prog_art.png", ren),
     boxImage("assets/programmer_art/box_prog_art.png", ren)

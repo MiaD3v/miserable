@@ -68,18 +68,18 @@ MS::MainScene::MainScene(SDL_Renderer *ren) :
         .image = &boxImage,
     };
 
-    doll_button = new MS::Rectangle;
-    *doll_button = {
-        .x = 50, .y = 50,
+    unload_doll_button = new MS::Rectangle;
+    *unload_doll_button = {
+        .x = 25, .y = 50,
         .w = 100, .h = 100,
         .r = 0x00, .g = 0xFF, .b = 0xFF, .a = 0x5F,
         .image = &mTestImage,
     };
-    mShop->rects = doll_button;
+    mShop->rects = unload_doll_button;
 
     upgrade_button = new MS::Rectangle;
     *upgrade_button = {
-        .x = 350, .y = 50,
+        .x = 150, .y = 50,
         .w = 100, .h = 100,
         .r = 0x00, .g = 0xFF, .b = 0xFF, .a = 0x5F,
         .image = &mTestImage,
@@ -90,12 +90,21 @@ MS::MainScene::MainScene(SDL_Renderer *ren) :
 
     *bottle_button = {
 
-        .x = 200, .y = 50,
+        .x = 275, .y = 50,
         .w = 100, .h = 100,
         .r = 0x00, .g = 0xFF, .b = 0xFF, .a = 0x5F,
         .image = &mTestImage,
     };
     mShop->rects->next->next = bottle_button;
+
+    load_doll_button = new MS::Rectangle;
+    *load_doll_button = {
+        .x = 400, .y = 50,
+        .w = 100, .h = 100,
+        .r = 0x00, .g = 0xFF, .b = 0xFF, .a = 0x5F,
+        .image = &mTestImage,
+    };
+    mShop->rects->next->next->next = load_doll_button;
 
     mPlayerArea->rects->next->x = (mPlayerArea->rects->w * (1 - player.x)) + mPlayerArea->rects->x;
 }
@@ -130,8 +139,8 @@ MS::Layer *MS::MainScene::frame() {
     }
 
     if (msState == SDL_BUTTON_LEFT && !held_down){
-        if(IsRectClicked(msX, msY, doll_button)){
-            if(inventory.Buy_Doll()){
+        if(IsRectClicked(msX, msY, unload_doll_button)){
+            if(inventory.Buy_Unload_Doll()){
                 std::print(stderr, "Bought Doll");
             } else {
                 std::print(stderr, "Not Enough Money");
@@ -147,6 +156,13 @@ MS::Layer *MS::MainScene::frame() {
         if(IsRectClicked(msX, msY, upgrade_button)){
             if(inventory.Upgrade_Dolly()){
                 std::print(stderr, "{}", inventory.dollyLevel);
+            } else {
+                std::print(stderr, "Not Enough Money");
+            };
+        }
+        if(IsRectClicked(msX, msY, load_doll_button)){
+            if(inventory.Buy_Load_Doll()){
+                std::print(stderr, "Buy Doll");
             } else {
                 std::print(stderr, "Not Enough Money");
             };

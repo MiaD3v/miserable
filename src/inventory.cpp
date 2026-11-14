@@ -12,9 +12,16 @@ bool Miserable::Inventory::charge(uint64_t cost) {
     }
     return false;
 }
-bool Miserable::Inventory::Buy_Doll() {
+bool Miserable::Inventory::Buy_Load_Doll() {
     if(charge(dollCost)){
-        dolls.push(1);
+        load_dolls.push(1);
+        return true;
+    }
+    return false;
+}
+bool Miserable::Inventory::Buy_Unload_Doll() {
+    if(charge(dollCost)){
+        unload_dolls.push(1);
         return true;
     }
     return false;

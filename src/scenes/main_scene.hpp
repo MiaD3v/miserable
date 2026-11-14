@@ -30,7 +30,8 @@ namespace Miserable {
             Layer *mBG = nullptr;
             Layer *mBoxes = nullptr;
             Layer *mShop = nullptr;
-            Rectangle *doll_button; 
+            Rectangle *unload_doll_button;
+            Rectangle *load_doll_button; 
             Rectangle *bottle_button; 
             Rectangle *upgrade_button;
             bool held_down = false;

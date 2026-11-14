@@ -1,14 +1,35 @@
 #include "inventory.hpp"
 
 Miserable::Inventory::Inventory() {
-    cents = 0;
 }
 uint64_t Miserable::Inventory::getMoney() {
     return cents;
 }
-void Miserable::Inventory::charge(uint64_t cost) {
-    cents -= cost;
+bool Miserable::Inventory::charge(uint64_t cost) {
+    if(cents >= cost){
+        cents -= cost;
+        return true;
+    }
+    return false;
 }
-void Miserable::Inventory::give_money(uint64_t wage) {
-    cents += wage;
+bool Miserable::Inventory::Buy_Doll() {
+    if(charge(dollCost)){
+        dolls.push(1);
+        return true;
+    }
+    return false;
+}
+bool Miserable::Inventory::Buy_Bottle() {
+    if(charge(bottleCost)){
+        bottleCount++;
+        return true;
+    }
+    return false;
+}
+bool Miserable::Inventory::Upgrade_Dolly() {
+    if(charge(upgradeCost)){
+        dollyLevel++;
+        return true;
+    }
+    return false;
 }

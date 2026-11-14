@@ -131,13 +131,25 @@ MS::Layer *MS::MainScene::frame() {
 
     if (msState == SDL_BUTTON_LEFT && !held_down){
         if(IsRectClicked(msX, msY, doll_button)){
-            std::print(stderr, "doll");
+            if(inventory.Buy_Doll()){
+                std::print(stderr, "Bought Doll");
+            } else {
+                std::print(stderr, "Not Enough Money");
+            };
         }
         if(IsRectClicked(msX, msY, bottle_button)){
-            std::print(stderr, "bottle");
+            if(inventory.Buy_Bottle()){
+                std::print(stderr, "{}", inventory.bottleCount);
+            } else {
+                std::print(stderr, "Not Enough Money");
+            };
         }
         if(IsRectClicked(msX, msY, upgrade_button)){
-            std::print(stderr, "upgrade");
+            if(inventory.Upgrade_Dolly()){
+                std::print(stderr, "{}", inventory.dollyLevel);
+            } else {
+                std::print(stderr, "Not Enough Money");
+            };
         }
         held_down = true;
     }

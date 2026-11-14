@@ -4,6 +4,7 @@ project(miserable)
 
 set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-fno-exceptions")
 set(CMAKE_CXX_STANDARD "26")
+set(SDLTTF_VENDORED ON CACHE BOOL "" FORCE)
 
 include(FetchContent)
 
@@ -39,6 +40,7 @@ add_executable(${PROJECT_NAME}
     src/scenes/main_scene.cpp
     src/deltatime.cpp
     src/image.cpp
+    src/inventory.cpp
 )
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL3::SDL3)
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL3_image::SDL3_image)

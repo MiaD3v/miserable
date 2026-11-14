@@ -4,6 +4,7 @@
 
 #include "../scene.hpp"
 #include "../image.hpp"
+#include "../inventory.hpp"
 
 namespace Miserable {
     class MainScene {
@@ -24,6 +25,7 @@ namespace Miserable {
             Image backgroundImage;
             Image dollyImage;
             Image boxImage;
+            Inventory inventory;
             
             Layer *mBG = nullptr;
             Layer *mBoxes = nullptr;

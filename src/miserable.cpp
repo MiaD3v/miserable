@@ -30,6 +30,7 @@ int MS::Game::run() {
     SDL_Event event;
     bool running = true;
     while (running) {
+        MS::del.start_frame();
         if (SDL_PollEvent(&event)) switch (event.type) {
             case SDL_EVENT_QUIT: running = false; continue;
             case SDL_EVENT_WINDOW_CLOSE_REQUESTED: running = false; continue;

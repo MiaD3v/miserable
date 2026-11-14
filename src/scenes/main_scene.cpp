@@ -33,7 +33,7 @@ MS::MainScene::MainScene(SDL_Renderer *ren) :
     mPlayerArea->rects = new MS::Rectangle;
     *mPlayerArea->rects = {
         .x = mLoadOffset, .y = 400,
-        .w = 350, .h = 100,
+        .w = 350, .h = 0,
         .r = 0x28, .g = 0x28, .b = 0x28, .a = 0xff,
         .image = &dollyImage,
     };

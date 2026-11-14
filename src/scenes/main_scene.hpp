@@ -13,10 +13,7 @@ namespace Miserable {
             void Resize(int w, int h);
             ~MainScene();
         private:
-<<<<<<< HEAD
             Layer *mPlayerArea = nullptr;
-=======
->>>>>>> 8956a5de11d0dece49bd96fa1f76e17f98385f59
             Image mTestImage;
             Layer *mBG = nullptr;
             Layer *mBoxes = nullptr;

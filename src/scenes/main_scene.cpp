@@ -76,16 +76,8 @@ void MS::MainScene::Resize(int w, int h) {
 }
 
 MS::MainScene::~MainScene() {
-
-    for (MS::Layer *lay = mBG; lay != nullptr;) {
-        MS::Layer *next_lay = lay->next;
-        for (MS::Rectangle *rect; rect != nullptr;) {
-            MS::Rectangle *next_rect = rect->next;
-            delete rect;
-            rect = next_rect;
-        }
-        delete lay;
-        lay = next_lay;
-    }
+    delete mPlayerArea;
+    delete mBG;
+    delete mBoxes;
 }
 

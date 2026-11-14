@@ -24,6 +24,38 @@ MS::MainScene::MainScene(SDL_Renderer *ren) : mPlayerArea(new MS::Layer), mBG(ne
         .x = 300+mLoadOffset, .y = 400,
         .w = 50, .h = 50,
         .r = 0xFF, .g = 0xFF, .b = 0xFF, .a = 0xff,
+        .image = &mTestImage,
+    };
+
+    mBG->rects = new MS::Rectangle;
+    *mBG->rects = {
+        .x = 0, .y = 0,
+        .w = 512, .h = 512,
+        .r = 0x28, .g = 0x28, .b = 0x28, .a = 0xff,
+        .image = &mTestImage,
+    };
+
+    mBoxes->rects = new MS::Rectangle;
+    *mBoxes->rects = {
+        .x = 50, .y = 250,
+        .w = 100, .h = 100,
+        .r = 0x28, .g = 0x28, .b = 0x28, .a = 0xff,
+        .image = &mTestImage,
+    };
+    mBoxes->rects->next = new MS::Rectangle;
+    *mBoxes->rects->next = {
+        .x = 450, .y = 250,
+        .w = 100, .h = 100,
+        .r = 0x28, .g = 0x28, .b = 0x28, .a = 0xff,
+        .image = &mTestImage,
+    };
+
+    mDolly->rects = new MS::Rectangle;
+    *mDolly->rects = {
+        .x = 250+mLoadOffset, .y = 400,
+        .w = 50, .h = 50,
+        .r = 0x28, .g = 0x28, .b = 0x28, .a = 0xff,
+        .image = &mTestImage,
     };
     
 }

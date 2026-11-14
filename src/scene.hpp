@@ -10,7 +10,7 @@ namespace Miserable {
             virtual void Key_Event(SDL_Event event) = delete;
             virtual void Mouse_Event(SDL_Event event) = delete;
             virtual void Resize() = delete;
-            virtual ~Scene() = {};
+            virtual ~Scene() = default;
         
     };
 };

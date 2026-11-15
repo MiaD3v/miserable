@@ -1,6 +1,6 @@
 #include <cstdlib>
 #include <iostream>
-
+#include <cstdlib>
 #include <SDL3/SDL.h>
 
 #include "miserable.hpp"
@@ -12,6 +12,7 @@ int main(void) {
 
     MS::Game game;
     MS::Scene scene;
+    srand((int)SDL_GetTicksNS());
     game.run();
     return 0;
 }

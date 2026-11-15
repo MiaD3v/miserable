@@ -1,12 +1,23 @@
 #include <print>
 #include <SDL3/SDL.h>
 #include <cassert>
+#include <cmath>
 #include "renderer.hpp"
 
 #include "panic.hpp"
 #include "image.hpp"
 
 namespace MS = Miserable;
+
+static float toRadians(float degrees) {
+    return degrees * (M_PI / 180.f);
+}
+
+static SDL_FPoint rotate(SDL_FPoint p, float rotation) {
+    float x = p.x * cosf(toRadians(rotation)) - p.y * sinf(toRadians(rotation));
+    float y = p.x * sinf(toRadians(rotation)) + p.y * cosf(toRadians(rotation));
+    return {x, y};
+}
 
 MS::Renderer::Renderer() {
     ;
@@ -61,25 +72,22 @@ void MS::Renderer::render(MS::Layer *tree) {
 
             SDL_Vertex verts[] = {
                 {
-                    .position = {(float)rect->x, (float)rect->y},
+                    .position = rotate({(float)rect->x, (float)rect->y}, 45),
                     .color = col,
                     .tex_coord = {0, 0},
                 },
                 {
-                    .position = {(float)(rect->x + rect->w), (float)rect->y},
+                    .position = rotate({(float)(rect->x + rect->w), (float)rect->y}, 45),
                     .color = col,
                     .tex_coord = {1, 0},
                 },
                 {
-                    .position = {(float)rect->x, (float)(rect->y + rect->h)},
+                    .position = rotate({(float)rect->x, (float)(rect->y + rect->h)}, 45),
                     .color = col,
                     .tex_coord = {0, 1},
                 },
                 {
-                    .position = {
-                        (float)(rect->x + rect->w),
-                        (float)(rect->y + rect->h),
-                    },
+                    .position = rotate({(float)(rect->x + rect->w), (float)(rect->y + rect->h)}, 45),
                     .color = col,
                     .tex_coord = {1, 1},
                 },

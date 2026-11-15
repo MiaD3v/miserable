@@ -288,7 +288,7 @@ MS::Layer *MS::MainScene::frame() {
 
             float dif = oldLoadScore - mLoaded;
 
-            inventory.give_money(dif * 500);
+            if (mLoaded > 0) inventory.give_money(dif * 5000);
 
             if (mLoaded < 0) mLoaded = 0;
         }

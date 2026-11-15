@@ -10,10 +10,10 @@
 
 namespace MS = Miserable;
 int getNextCountdown() {
-    return 10 * (rand() % 40);
+    return 10 * (((unsigned) rand()) % 20);
 }
-float getReactionWindow() {
-    return 2.0;
+float MS::MainScene::getReactionWindow() {
+    return 0.5 + 1.5 / (1.0 + exp((frameCount - 90.0) / 20.0));
 }
 static bool decrementHealth(int &hp) {
     hp--;
@@ -319,7 +319,7 @@ MS::Layer *MS::MainScene::frame() {
     float msY = -1;
     const SDL_MouseButtonFlags msState = SDL_GetMouseState(&msX, &msY);
     float divisor = std::min(width, height);
-    float offset = (std::max(width, height) - std::min(width, height))/2;
+    float offset = (std::max(width, height) - std::min(width, height))/2.0;
     if(width == std::max(width, height)){
         msX -= offset;
     } else{
@@ -425,6 +425,9 @@ bool MS::MainScene::IsRectClicked(float msX, float msY, MS::Rectangle *button){
 
 void MS::MainScene::bearzos_attack() {
     static float reactionWindow = 2.0;
+    if (bearzos.bearzosAttackStage >= 2) {
+        bearzos.pissing_seen = bearzos.pissing_seen || pissing;
+    }
     if (bearzos.bearzosAttackStage == 0) {
         bearzos.bearzosAttackStage = 1;
         reactionWindow = getReactionWindow();
@@ -439,7 +442,13 @@ void MS::MainScene::bearzos_attack() {
             mBearzos->rects->image = &bearzosMadImage;
             for (int i = 0; i < 20; i++) {
                 if (decrementHealth(player.hp))
-                    std::print("YOU DIED!");
+                    dead = true;
+
+                TTF_DestroyText(hp_display->text);
+                std::string hp_string = std::format("{}", player.hp);
+                const char* c_hp_string = hp_string.c_str();
+                hpText = TTF_CreateText(mTtfEngine, mFont, c_hp_string, sizeof(hp_string) - 1);
+                hp_display->text = hpText;
             }
         } else {
             bearzos.bearzosAttackStage = 4;

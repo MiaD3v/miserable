@@ -5,7 +5,7 @@
 
 #include <SDL3/SDL.h>
 
-#include "../scene.hpp"
+#include "../scene.hpp" 
 #include "game_over_screen.hpp"
 #include "../image.hpp"
 #include "../inventory.hpp"
@@ -66,6 +66,7 @@ namespace Miserable {
             Rectangle *ldoll_display;
             Rectangle *bottle_display;
             Rectangle *level_display;
+            
             bool held_down = false;
             int height = 512;
             int width = 512;
@@ -107,6 +108,7 @@ namespace Miserable {
             float loadMult = 1;
 
             float frameCount;
+            float getReactionWindow();
             std::string getMoneyAsString(uint64_t money);
 
     };

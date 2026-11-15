@@ -1,8 +1,6 @@
 #include "game_over_screen.hpp"
 #include "../renderer.hpp"
-#include <print>
 #include <SDL3/SDL.h>
-#include "../deltatime.hpp"
 
 
 namespace MS = Miserable;

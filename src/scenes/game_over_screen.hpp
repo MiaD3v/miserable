@@ -1,9 +1,7 @@
 #pragma once
 #include <SDL3/SDL.h>
-#include <cstddef>
 
 #include "../scene.hpp"
-#include "../image.hpp"
 #include "../renderer.hpp"
 
 namespace Miserable {

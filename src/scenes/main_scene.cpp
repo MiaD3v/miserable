@@ -44,7 +44,7 @@ MS::MainScene::MainScene(SDL_Renderer *ren) :
     };
     mPlayerArea->rects->next = new MS::Rectangle;
     *mPlayerArea->rects->next = {
-        .x = 300+mLoadOffset, .y = 400,
+        .x = 300+mLoadOffset, .y = 375,
         .w = 50, .h = 50,
         .r = 0xFF, .g = 0xFF, .b = 0xFF, .a = 0xff,
         .image = &playerImageNeutral,
@@ -136,7 +136,15 @@ MS::Layer *MS::MainScene::frame() {
     float msY = -1;
     const bool *kbState = SDL_GetKeyboardState(&numKeys);
     const SDL_MouseButtonFlags msState = SDL_GetMouseState(&msX, &msY);
-
+    float divisor = std::min(width, height);
+    float offset = (std::max(width, height) - std::min(width, height))/2;
+    msX /= (float)divisor/512;
+    msY /= (float)divisor/512;
+    if(width == std::max(width, height)){
+        msX -= offset;
+    } else{
+        msY -= offset;
+    }
     if (kbState[SDL_SCANCODE_A]) {
         player.x += MS::dt;
         if (player.x > 1) player.x = 1;
@@ -148,11 +156,14 @@ MS::Layer *MS::MainScene::frame() {
         if (player.x < 0) player.x = 0;
         mPlayerArea->rects->next->x = (mPlayerArea->rects->w * (1 - player.x)) + mPlayerArea->rects->x;
     }
-
+    
     if (msState == SDL_BUTTON_LEFT && !held_down){
+        std::print(stderr, "{},{}\n", msX, msY);
+        std::print(stderr, "{},{}\n", width, height);
+        std::print(stderr, "{},{}\n", divisor, offset);
         if(IsRectClicked(msX, msY, unload_doll_button)){
             if(inventory.Buy_Unload_Doll()){
-                std::print(stderr, "Bought Doll");
+                std::print(stderr, "bought doll\n");
             } else {
                 std::print(stderr, "Not Enough Money");
             };
@@ -188,6 +199,8 @@ MS::Layer *MS::MainScene::frame() {
 }
 
 void MS::MainScene::Resize(int w, int h) {
+    width = w;
+    height = h;
 
 }
 

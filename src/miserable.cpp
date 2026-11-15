@@ -40,6 +40,7 @@ int MS::Game::run() {
             switch (event.type) {
                 case SDL_EVENT_QUIT: running = false; break;
                 case SDL_EVENT_WINDOW_CLOSE_REQUESTED: running = false; break;
+                case SDL_EVENT_WINDOW_RESIZED: mainScene.Resize(event.window.data1, event.window.data2);
             }
         }
 

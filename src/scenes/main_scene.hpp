@@ -35,6 +35,8 @@ namespace Miserable {
             Rectangle *bottle_button; 
             Rectangle *upgrade_button;
             bool held_down = false;
+            int height = 512;
+            int width = 512;
 
             double mLoadOffset = 112;
             struct {

@@ -64,7 +64,7 @@ namespace Miserable {
             struct {
                 float timeSinceBearzos = 0.0f;
                 int bearzosAttackStage = 0;
-                float fluff_bearzos_countdown = 50.0;
+                float fluff_bearzos_countdown = 30.0;
                 bool pissing_seen = false;
                 float curtainCloseCooldown = 0.0;
             } bearzos;

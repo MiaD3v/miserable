@@ -12,7 +12,7 @@
 
 namespace MS = Miserable;
 int getNextCountdown() {
-    return 10 * (((unsigned) rand()) % 20);
+    return 10 * (((unsigned) rand()) % 3);
 }
 float MS::MainScene::getReactionWindow() {
     return 0.5 + 1.5 / (1.0 + exp((frameCount - 90.0) / 20.0));
@@ -286,7 +286,7 @@ MS::Layer *MS::MainScene::frame() {
 
     mPlayerArea->rects->next->y = 280 + 5*sin(SDL_GetTicks() / 200.0);
     if (!pissing || inventory.bottleCount.empty()){
-        mBladderFilled += MS::dt / 8;
+        mBladderFilled += MS::dt / 12;
 
     } else {
         mBladderFilled -= MS::dt / 2.2;

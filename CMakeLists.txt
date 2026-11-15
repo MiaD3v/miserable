@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 
 project(miserable)
 
-set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-fno-exceptions")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-exceptions")
 set(CMAKE_CXX_STANDARD "26")
 set(SDLTTF_VENDORED ON CACHE BOOL "" FORCE)
 

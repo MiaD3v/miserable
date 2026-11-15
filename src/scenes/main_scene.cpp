@@ -186,13 +186,13 @@ MS::MainScene::MainScene(SDL_Renderer *ren) :
     };
     mGui->rects->next->next->next->next->next = load_bar_fg;
 
-    moneyText = TTF_CreateText(mTtfEngine, mFont, "100", sizeof("100") - 1);
+    hpText = TTF_CreateText(mTtfEngine, mFont, "100", sizeof("100") - 1);
     hp_display = new MS::Rectangle;
     *hp_display = {
         .x = 236, .y =  502 - 45,
-        .w = 0, .h = 0,
-        .r = 0x00, .g = 0x00, .b = 0x00, .a = 0x5F,
-        .image = nullptr, .text = moneyText,
+        .w = 1, .h = 1,
+        .r = 0x00, .g = 0x00, .b = 0x00, .a = 0xFF,
+        .image = nullptr, .text = hpText,
     };
     mGui->rects->next->next->next->next->next->next = hp_display;
     
@@ -227,7 +227,7 @@ MS::Layer *MS::MainScene::frame() {
     pissing = kbState[SDL_SCANCODE_P];
     
     if (!pissing){
-        mBladderFilled += MS::dt / 25;
+        mBladderFilled += MS::dt / 20;
     } else {
         mBladderFilled -= MS::dt / 20;
         if (mBladderFilled < 0.0) {
@@ -240,6 +240,11 @@ MS::Layer *MS::MainScene::frame() {
         if (decrementHealth(player.hp)) {
             dead = true;
         }
+        TTF_DestroyText(hp_display->text);
+        std::string hp_string = std::format("{}", player.hp);
+        const char* c_hp_string = hp_string.c_str();
+        hpText = TTF_CreateText(mTtfEngine, mFont, c_hp_string, sizeof(hp_string) - 1);
+        hp_display->text = hpText;
     }
     if(mGui->rects->next->next->w < 176) mGui->rects->next->next->w = int((196 - 20) * mBladderFilled);
     bearzos.timeSinceBearzos += MS::dt;
@@ -330,6 +335,7 @@ MS::Layer *MS::MainScene::frame() {
         moneyText = TTF_CreateText(mTtfEngine, mFont, moneyStr.c_str(), moneyStr.length());
         mGui->next->rects->next->next->text = moneyText;
     }
+
 
     return mBearzos;
 }

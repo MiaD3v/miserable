@@ -2,10 +2,16 @@
 #include "main_scene.hpp"
 #include <print>
 #include <SDL3/SDL.h>
+#include <cstdlib>
 #include "../deltatime.hpp"
 
 namespace MS = Miserable;
-
+int getNextCountdown() {
+    return 40 * (rand() % 30);
+}
+float getReactionWindow() {
+    return 2.0;
+}
 static bool decrementHealth(int &hp) {
     hp--;
     if (hp <= 0) {
@@ -18,11 +24,17 @@ static bool decrementHealth(int &hp) {
 MS::MainScene::MainScene(SDL_Renderer *ren) :
     mPlayerArea(new MS::Layer),
     mBG(new MS::Layer),
+    mBearzos(new MS::Layer),
     mBoxes(new MS::Layer),
     mShop(new MS::Layer),
     mTestImage("assets/BG.png", ren),
     playerImageNeutral("assets/Player Sprites/Player Char-neutral-flipped.png", ren),
     backgroundImage("assets/Backgrounds/warehouse stage 3.png", ren),
+    backgroundPeekImage("assets/Backgrounds/warehouse stage 2.png", ren),
+    backgroundOpenImage("assets/Backgrounds/warehouse stage.png", ren),
+    bearzosNeutralImage("assets/Stuff Bearzos Sprites/Stuff Bearzos- observing.png", ren),
+    bearzosMadImage("assets/Stuff Bearzos Sprites/Stuff Bearzos- Scolding.png", ren),
+    bearzosGladImage("assets/Stuff Bearzos Sprites/Stuff Bearzos- happy.png", ren),
     dollyImage("assets/programmer_art/dolly_prog_art.png", ren),
     boxImage("assets/programmer_art/box_prog_art.png", ren)
     {
@@ -31,9 +43,17 @@ MS::MainScene::MainScene(SDL_Renderer *ren) :
     // mFont = TTF_OpenFont("assets/lazy_arie.ttf", 24.0);
     // mTtfText = TTF_CreateText(mTtfEngine, mFont, "Test Text", sizeof("Test Text") - 1);
 
+    mBearzos->next = mBG;
     mBG->next = mBoxes;
     mBoxes->next = mPlayerArea;
     mPlayerArea->next = mShop;
+
+    mBearzos->rects = new MS::Rectangle{
+        .x = 128, .y = 128,
+        .w = 256, .h = 256,
+        .r = 0, .g = 0, .b = 0, .a=0,
+        .image = &bearzosNeutralImage,
+    };
 
     mPlayerArea->rects = new MS::Rectangle;
     *mPlayerArea->rects = {
@@ -116,23 +136,30 @@ MS::MainScene::MainScene(SDL_Renderer *ren) :
     // mPlayerArea->rects->next->r = 0x28;
     // mPlayerArea->rects->next->g = 0x28;
     // mPlayerArea->rects->next->b = 0x28;
-    // mPlayerArea->rects->next->a = 0xff;
+    // mPlayerArea->rects->next->a = 0xff;bearzos.bearzosAttackStage == 3 
     // mPlayerArea->rects->next->text = mTtfText;
 }
 
 MS::Layer *MS::MainScene::frame() {
-
-    mBladderFilled += MS::dt / 45;
+    int numKeys = 0;
+    const bool *kbState = SDL_GetKeyboardState(&numKeys);
+    pissing = kbState[SDL_SCANCODE_P];
+    
+    if (!pissing){
+        mBladderFilled += MS::dt / 45;
+    } else {
+        mBladderFilled -= MS::dt / 20;
+    }
     while (mBladderFilled > 1 + 1.f/45) {
         mBladderFilled -= (1.f / 45);
         if (decrementHealth(player.hp)) {
         }
     }
-
-    int numKeys = 0;
+    bearzos.timeSinceBearzos += MS::dt;
+    if (bearzos.timeSinceBearzos > bearzos.fluff_bearzos_countdown)
+        bearzos_attack();
     float msX = -1;
     float msY = -1;
-    const bool *kbState = SDL_GetKeyboardState(&numKeys);
     const SDL_MouseButtonFlags msState = SDL_GetMouseState(&msX, &msY);
     float divisor = std::min(width, height);
     float offset = (std::max(width, height) - std::min(width, height))/2;
@@ -194,7 +221,7 @@ MS::Layer *MS::MainScene::frame() {
         held_down = false;
     }
 
-    return mBG;
+    return mBearzos;
 }
 
 void MS::MainScene::Resize(int w, int h) {
@@ -215,7 +242,41 @@ MS::MainScene::~MainScene() {
 
     delete mPlayerArea;
     delete mBG;
+    delete mBearzos;
     delete mBoxes;
     delete mShop;
 }   
 
+void MS::MainScene::bearzos_attack() {
+    static float reactionWindow = 2.0;
+    if (bearzos.bearzosAttackStage == 0) {
+        bearzos.bearzosAttackStage = 1;
+        reactionWindow = getReactionWindow();
+        mBG->rects->image = &backgroundPeekImage;
+    } else if (bearzos.bearzosAttackStage == 1 && bearzos.timeSinceBearzos - bearzos.fluff_bearzos_countdown > reactionWindow) {
+        bearzos.bearzosAttackStage = 2; 
+        mBG->rects->image = &backgroundOpenImage;
+        bearzos.pissing_seen = pissing;
+    } else if (bearzos.bearzosAttackStage == 2 && bearzos.timeSinceBearzos - bearzos.fluff_bearzos_countdown > reactionWindow + 1.) {
+        if (bearzos.pissing_seen) {
+            bearzos.bearzosAttackStage = 3;
+            mBearzos->rects->image = &bearzosMadImage;
+            for (int i = 0; i < 20; i++) {
+                if (decrementHealth(player.hp))
+                    std::print("YOU DIED!");
+            }
+        } else {
+            bearzos.bearzosAttackStage = 4;
+            mBearzos->rects->image = &bearzosGladImage;
+        }
+    } else if ((bearzos.bearzosAttackStage == 3 || bearzos.bearzosAttackStage == 4)&& bearzos.timeSinceBearzos - bearzos.fluff_bearzos_countdown > reactionWindow + 2.) {
+        bearzos.bearzosAttackStage = 5;
+        mBG->rects->image = &backgroundPeekImage;
+        mBearzos->rects->image = &bearzosNeutralImage;
+    } else if (bearzos.bearzosAttackStage == 5 && bearzos.timeSinceBearzos - bearzos.fluff_bearzos_countdown > reactionWindow + 2.5){
+        mBG->rects->image = &backgroundImage;
+        bearzos.bearzosAttackStage = 0;
+        bearzos.timeSinceBearzos = 0.0;
+        bearzos.fluff_bearzos_countdown = (float)getNextCountdown();
+    }
+}

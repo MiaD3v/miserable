@@ -10,7 +10,7 @@
 
 namespace MS = Miserable;
 int getNextCountdown() {
-    return 40 * (rand() % 30);
+    return 10 * (rand() % 40);
 }
 float getReactionWindow() {
     return 2.0;

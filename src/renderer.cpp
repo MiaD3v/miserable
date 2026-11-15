@@ -43,16 +43,61 @@ void MS::Renderer::render(MS::Layer *tree) {
                 .h = (float)rect->h,
             };
 
-            if (!rect->image && !rect->text) {
+            SDL_FColor col = {
+                .r = 1.f,
+                .g = 1.f,
+                .b = 1.f,
+                .a = 1.f,
+            };
 
-                (void )SDL_SetRenderDrawColor(
+            if (!rect->image) {
+                col = {
+                    .r = rect->r / 255.f,
+                    .g = rect->g / 255.f,
+                    .b = rect->b / 255.f,
+                    .a = rect->a / 255.f,
+                };
+            }
+
+            SDL_Vertex verts[] = {
+                {
+                    .position = {(float)rect->x, (float)rect->y},
+                    .color = col,
+                    .tex_coord = {0, 0},
+                },
+                {
+                    .position = {(float)(rect->x + rect->w), (float)rect->y},
+                    .color = col,
+                    .tex_coord = {1, 0},
+                },
+                {
+                    .position = {(float)rect->x, (float)(rect->y + rect->h)},
+                    .color = col,
+                    .tex_coord = {0, 1},
+                },
+                {
+                    .position = {
+                        (float)(rect->x + rect->w),
+                        (float)(rect->y + rect->h),
+                    },
+                    .color = col,
+                    .tex_coord = {1, 1},
+                },
+            };
+
+            if (!rect->text) {
+
+                (void) SDL_SetRenderDrawColor(
                     mRenderer,
                     rect->r, rect->g, rect->b, rect->a);
-                (void) SDL_RenderFillRect(mRenderer, &SDLRect);
 
-            } else if (rect->image) {
-
-                (void) SDL_RenderTexture(mRenderer, rect->image->mTexture, nullptr, &SDLRect);
+                SDL_Texture *tex =
+                    (rect->image) ? rect->image->mTexture : nullptr;
+                (void) SDL_RenderGeometry(mRenderer,
+                                          tex,
+                                          verts,
+                                          4,
+                                          (int[]){0,1,2,1,2,3}, 6);
 
             } else {
                 assert(rect->text);

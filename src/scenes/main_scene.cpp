@@ -43,9 +43,9 @@ MS::MainScene::MainScene(SDL_Renderer *ren) :
     bearzosGladImage("assets/Stuff Bearzos Sprites/Stuff Bearzos- happy.png", ren),
     dollyImage("assets/programmer_art/dolly_prog_art.png", ren),
     boxImage("assets/programmer_art/box_prog_art.png", ren),
-    upgradeImage("assets/buttons/upgrade.png", ren),
-    dollImage("assets/buttons/Doll.png", ren),
-    bottleImage("assets/buttons/Lint.png", ren),
+    upgradeImage("assets/Buttons/upgrade.png", ren),
+    dollImage("assets/Buttons/Doll.png", ren),
+    bottleImage("assets/Buttons/Lint.png", ren),
     jankBoxImage("assets/Backgrounds/SecretFG.png", ren)
     {
 
@@ -284,11 +284,11 @@ MS::Layer *MS::MainScene::frame() {
     if (!pissing || inventory.bottleCount.empty()){
         mBladderFilled += MS::dt / 12;
     } else {
-        mBladderFilled -= MS::dt / 8;
+        mBladderFilled -= MS::dt / 1.5;
         if (mBladderFilled < 0.0) {
             mBladderFilled = 0.0;
         } else{
-            inventory.bottleCount.front() -= MS::dt * 1.6;
+            inventory.bottleCount.front() -= MS::dt * 2;
             if(inventory.bottleCount.front() <= 0) {
                 inventory.bottleCount.pop();
                 TTF_DestroyText(bottle_display->text);

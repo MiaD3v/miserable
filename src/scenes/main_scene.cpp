@@ -4,6 +4,7 @@
 #include <SDL3/SDL.h>
 #include <cstdlib>
 #include "../deltatime.hpp"
+#include "../inventory.hpp"
 
 namespace MS = Miserable;
 int getNextCountdown() {
@@ -229,7 +230,13 @@ MS::Layer *MS::MainScene::frame() {
             mLoaded += MS::dt / loadTime;
             if (mLoaded > 1) mLoaded = 1;
         } else if (player.x >= 0.9) { // un-loading
+            float oldLoadScore = mLoaded;
             mLoaded -= MS::dt / loadTime;
+
+            float dif = oldLoadScore - mLoaded;
+
+            inventory.give_money(dif * 500);
+
             if (mLoaded < 0) mLoaded = 0;
         }
         std::print(stderr, "loaded: {}\n", mLoaded);

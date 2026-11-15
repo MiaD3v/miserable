@@ -18,23 +18,30 @@ namespace Miserable {
             Layer* frame();
             void Resize(int w, int h);
             bool IsRectClicked(float msX, float msY, Rectangle *button);
+            void bearzos_attack();
             ~MainScene();
         private:
 
             // 0 is empty, 1 is full!
             float mBladderFilled = 0.f;
-
+            bool pissing = false;
             Layer *mPlayerArea = nullptr;
             Image mTestImage;
             Image playerImageNeutral;
             Image backgroundImage;
+            Image backgroundPeekImage;
+            Image backgroundOpenImage;
             Image dollyImage;
+            Image bearzosNeutralImage;
+            Image bearzosMadImage;
+            Image bearzosGladImage;
             Image boxImage;
             Inventory inventory;
-            
+            Layer *mBearzos = nullptr;
             Layer *mBG = nullptr;
             Layer *mBoxes = nullptr;
             Layer *mShop = nullptr;
+            Layer *mGui = nullptr;
             Rectangle *unload_doll_button;
             Rectangle *load_doll_button; 
             Rectangle *bottle_button; 
@@ -42,7 +49,13 @@ namespace Miserable {
             bool held_down = false;
             int height = 512;
             int width = 512;
-
+            struct {
+                float timeSinceBearzos = 0.0f;
+                int bearzosAttackStage = 0;
+                float fluff_bearzos_countdown = 50.0;
+                bool pissing_seen = false;
+                float curtainCloseCooldown = 0.0;
+            } bearzos;
             double mLoadOffset = 112;
             struct {
                 // All of these are 0 - 1;

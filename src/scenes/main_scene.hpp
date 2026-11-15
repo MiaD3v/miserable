@@ -44,6 +44,7 @@ namespace Miserable {
             Image upgradeImage;
             Image dollImage;
             Image bottleImage;
+            Image udollImage;
             Image jankBoxImage;
             Inventory inventory;
             Layer *mBearzos = nullptr;

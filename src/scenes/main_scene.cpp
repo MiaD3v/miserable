@@ -46,8 +46,9 @@ MS::MainScene::MainScene(SDL_Renderer *ren) :
     dollyImage("assets/programmer_art/dolly_prog_art.png", ren),
     boxImage("assets/programmer_art/box_prog_art.png", ren),
     upgradeImage("assets/Buttons/upgrade.png", ren),
-    dollImage("assets/Buttons/Doll.png", ren),
-    bottleImage("assets/Buttons/Lint.png", ren),
+    dollImage("assets/Buttons/Robot- grabbing box.png", ren),
+    udollImage("assets/Buttons/Doll- holding box.png", ren),
+    bottleImage("assets/Buttons/Lint Roller.png", ren),
     jankBoxImage("assets/Backgrounds/SecretFG.png", ren)
     {
 
@@ -106,7 +107,7 @@ MS::MainScene::MainScene(SDL_Renderer *ren) :
         .x = 25, .y = 50,
         .w = 70, .h = 70,
         .r = 0x00, .g = 0xFF, .b = 0xFF, .a = 0x5F,
-        .image = &dollImage,
+        .image = &udollImage,
     };
     mShop->rects = unload_doll_button;
 

@@ -13,9 +13,9 @@ namespace Miserable {
             std::queue<float> unload_dolls;
             std::queue<float> bottleCount;
             int dollyLevel = 1;
-            int dollCost = 10;
+            int dollCost = 200;
             int bottleCost = 500;
-            int upgradeCost = 10;
+            int upgradeCost = 1000;
 
             explicit Inventory();
             uint64_t getMoney();

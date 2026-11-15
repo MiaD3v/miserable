@@ -1,5 +1,7 @@
-#pragma
+#pragma once
 #include <cstddef>
+#include <string>
+#include <cstdint>
 
 #include <SDL3/SDL.h>
 
@@ -40,11 +42,14 @@ namespace Miserable {
             Image jankBoxImage;
             Inventory inventory;
             Layer *mBearzos = nullptr;
+
             Layer *mBG = nullptr;
             Layer *mBoxes = nullptr;
             Layer *mShop = nullptr;
             Layer *mGui = nullptr;
             Layer *mJankBox = nullptr;
+            Layer *mMoney = nullptr;
+
             Rectangle *unload_doll_button;
             Rectangle *load_doll_button; 
             Rectangle *bottle_button; 
@@ -70,12 +75,20 @@ namespace Miserable {
                 float loadingSpeed = 15;
                 size_t nLoadingDolls = 0;
                 size_t nUnloadingDolls = 0;
+
                 int hp = 100;
             } player;
 
             TTF_TextEngine *mTtfEngine = nullptr;
-            TTF_Text *mTtfText = nullptr;
             TTF_Font *mFont = nullptr;
+
+            TTF_Text *moneyText = nullptr;
+
+            float mLoaded = 0.f;
+
+            float loadTime = 7.5f;
+
+            std::string getMoneyAsString(uint64_t money);
 
     };
 };

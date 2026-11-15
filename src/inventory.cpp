@@ -26,6 +26,9 @@ bool Miserable::Inventory::Buy_Unload_Doll() {
     }
     return false;
 }
+void Miserable::Inventory::give_money(uint64_t money) {
+    cents += money;
+}
 bool Miserable::Inventory::Buy_Bottle() {
     if(charge(bottleCost)){
         bottleCount++;

@@ -3,7 +3,9 @@
 #include <print>
 #include <SDL3/SDL.h>
 #include <cstdlib>
+#include <format>
 #include "../deltatime.hpp"
+#include "../inventory.hpp"
 
 namespace MS = Miserable;
 int getNextCountdown() {
@@ -42,9 +44,9 @@ MS::MainScene::MainScene(SDL_Renderer *ren) :
     boxImage("assets/programmer_art/box_prog_art.png", ren),
     jankBoxImage("assets/Backgrounds/SecretFG.png", ren)
     {
-    // mTtfEngine = TTF_CreateRendererTextEngine(ren);
-    // mFont = TTF_OpenFont("assets/lazy_arie.ttf", 24.0);
-    // mTtfText = TTF_CreateText(mTtfEngine, mFont, "Test Text", sizeof("Test Text") - 1);
+
+    mTtfEngine = TTF_CreateRendererTextEngine(ren);
+    mFont = TTF_OpenFont("assets/lazy_arie.ttf", 24.0);
 
     mBearzos->next = mBG;
     mBG->next = mPlayerArea;
@@ -186,12 +188,27 @@ MS::MainScene::MainScene(SDL_Renderer *ren) :
     
 
     mPlayerArea->rects->next->x = (mPlayerArea->rects->w * (1 - player.x)) + mPlayerArea->rects->x;
-    // mPlayerArea->rects->next->image = nullptr;
-    // mPlayerArea->rects->next->r = 0x28;
-    // mPlayerArea->rects->next->g = 0x28;
-    // mPlayerArea->rects->next->b = 0x28;
-    // mPlayerArea->rects->next->a = 0xff;bearzos.bearzosAttackStage == 3 
-    // mPlayerArea->rects->next->text = mTtfText;
+
+    {
+        std::string moneyStr = getMoneyAsString(inventory.getMoney());
+        moneyText = TTF_CreateText(mTtfEngine, mFont, moneyStr.c_str(), moneyStr.length());
+    }
+    mGui->next = new Layer{
+        .rects = new Rectangle{
+            .x = 0, .y = 0, .w = 512, .h = 50,
+            .r = 0xff, .g = 0xff, .b = 0xff, .a = 0xff,
+            .next = new Rectangle{
+            .x = 10, .y = 10, .w = 512-20, .h = 30,
+            .r = 0x00, .g = 0x00, .b = 0x00, .a = 0xff,
+            .next = new Rectangle{
+            .x = 10, .y = 10,
+            .r = 0xff, .g = 0xff, .b = 0xff, .a = 0xff,
+            .text = moneyText,
+        },
+        },
+        },
+    };
+
 }
 
 MS::Layer *MS::MainScene::frame() {
@@ -244,7 +261,24 @@ MS::Layer *MS::MainScene::frame() {
         if (player.x < 0) player.x = 0;
         mPlayerArea->rects->next->x = (mPlayerArea->rects->w * (1 - player.x)) + mPlayerArea->rects->x;
     }
-    
+
+    if (kbState[SDL_SCANCODE_SPACE]) {
+        if (player.x <= 0.1) { // loading
+            mLoaded += MS::dt / loadTime;
+            if (mLoaded > 1) mLoaded = 1;
+        } else if (player.x >= 0.9) { // un-loading
+            float oldLoadScore = mLoaded;
+            mLoaded -= MS::dt / loadTime;
+
+            float dif = oldLoadScore - mLoaded;
+
+            inventory.give_money(dif * 500);
+
+            if (mLoaded < 0) mLoaded = 0;
+        }
+        std::print(stderr, "loaded: {}\n", mLoaded);
+    }
+
     if (msState == SDL_BUTTON_LEFT && !held_down){
         if(IsRectClicked(msX, msY, unload_doll_button)){
             if(inventory.Buy_Unload_Doll()){
@@ -280,6 +314,13 @@ MS::Layer *MS::MainScene::frame() {
         held_down = false;
     }
 
+    {
+        TTF_DestroyText(mGui->next->rects->next->next->text);
+        std::string moneyStr = getMoneyAsString(inventory.getMoney());
+        moneyText = TTF_CreateText(mTtfEngine, mFont, moneyStr.c_str(), moneyStr.length());
+        mGui->next->rects->next->next->text = moneyText;
+    }
+
     return mBearzos;
 }
 
@@ -292,19 +333,6 @@ void MS::MainScene::Resize(int w, int h) {
 bool MS::MainScene::IsRectClicked(float msX, float msY, MS::Rectangle *button){
     return msX > button->x && msX < button->x + button->w && msY > button->y && msY < button->y + button->h;
 }
-
-MS::MainScene::~MainScene() {
-
-    // TTF_CloseFont(mFont);
-    // TTF_DestroyText(mTtfText);
-    // TTF_DestroyRendererTextEngine(mTtfEngine);
-
-    delete mPlayerArea;
-    delete mBG;
-    delete mBearzos;
-    delete mBoxes;
-    delete mShop;
-}   
 
 void MS::MainScene::bearzos_attack() {
     static float reactionWindow = 2.0;
@@ -339,3 +367,25 @@ void MS::MainScene::bearzos_attack() {
         bearzos.fluff_bearzos_countdown = (float)getNextCountdown();
     }
 }
+
+std::string MS::MainScene::getMoneyAsString(uint64_t money) {
+    uint64_t dollars = money / 100;
+    uint64_t cents = money % 100;
+
+    // Don't worry about it!
+    return std::format("${}.{}{}", dollars, cents/10, cents % 10);
+
+}
+
+MS::MainScene::~MainScene() {
+
+    TTF_CloseFont(mFont);
+    TTF_DestroyRendererTextEngine(mTtfEngine);
+
+    delete mPlayerArea;
+    delete mBG;
+    delete mBearzos;
+    delete mBoxes;
+    delete mShop;
+}
+

@@ -31,6 +31,7 @@ MS::MainScene::MainScene(SDL_Renderer *ren) :
     mJankBox(new MS::Layer),
     mTestImage("assets/BG.png", ren),
     playerImageNeutral("assets/Player Sprites/Player Char-neutral-flipped.png", ren),
+    playerImageRight("assets/Player Sprites/Player Char-neutral.png", ren),
     backgroundImage("assets/Backgrounds/warehouse stage 3.png", ren),
     backgroundPeekImage("assets/Backgrounds/warehouse stage 2.png", ren),
     backgroundOpenImage("assets/Backgrounds/warehouse stage.png", ren),
@@ -210,12 +211,14 @@ MS::Layer *MS::MainScene::frame() {
     msY /= (float)divisor/512;
     
     if (kbState[SDL_SCANCODE_A] && !pissing) {
+        mPlayerArea->rects->next->image = &playerImageNeutral;
         player.x += MS::dt;
         if (player.x > 1) player.x = 1;
         mPlayerArea->rects->next->x = (mPlayerArea->rects->w * (1 - player.x)) + mPlayerArea->rects->x;
     }
 
     if (kbState[SDL_SCANCODE_D] && !pissing) {
+        mPlayerArea->rects->next->image = &playerImageRight;
         player.x -= MS::dt;
         if (player.x < 0) player.x = 0;
         mPlayerArea->rects->next->x = (mPlayerArea->rects->w * (1 - player.x)) + mPlayerArea->rects->x;

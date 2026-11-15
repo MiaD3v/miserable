@@ -28,6 +28,7 @@ namespace Miserable {
             Layer *mPlayerArea = nullptr;
             Image mTestImage;
             Image playerImageNeutral;
+            Image playerImageRight;
             Image backgroundImage;
             Image backgroundPeekImage;
             Image backgroundOpenImage;

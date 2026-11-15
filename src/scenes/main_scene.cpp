@@ -47,9 +47,9 @@ MS::MainScene::MainScene(SDL_Renderer *ren) :
     // mTtfText = TTF_CreateText(mTtfEngine, mFont, "Test Text", sizeof("Test Text") - 1);
 
     mBearzos->next = mBG;
-    mBG->next = mBoxes;
-    mBoxes->next = mPlayerArea;
-    mPlayerArea->next = mShop;
+    mBG->next = mPlayerArea;
+    mPlayerArea->next = mBoxes;
+    mBoxes->next = mShop;
     mShop->next = mJankBox;
     mJankBox->next = mGui;
 
@@ -90,13 +90,6 @@ MS::MainScene::MainScene(SDL_Renderer *ren) :
         .r = 0x28, .g = 0x28, .b = 0x28, .a = 0xff,
         .image = &boxImage,
     };
-    mBoxes->rects->next = new MS::Rectangle;
-    *mBoxes->rects->next = {
-        .x = 450, .y = 250,
-        .w = 100, .h = 100,
-        .r = 0x28, .g = 0x28, .b = 0x28, .a = 0xff,
-        .image = &boxImage,
-    };
 
     mJankBox->rects = new MS::Rectangle;
     *mJankBox->rects = {
@@ -111,7 +104,7 @@ MS::MainScene::MainScene(SDL_Renderer *ren) :
         .x = 25, .y = 50,
         .w = 100, .h = 100,
         .r = 0x00, .g = 0xFF, .b = 0xFF, .a = 0x5F,
-        .image = &mTestImage,
+        .image = &boxImage,
     };
     mShop->rects = unload_doll_button;
 
@@ -120,7 +113,7 @@ MS::MainScene::MainScene(SDL_Renderer *ren) :
         .x = 150, .y = 50,
         .w = 100, .h = 100,
         .r = 0x00, .g = 0xFF, .b = 0xFF, .a = 0x5F,
-        .image = &mTestImage,
+        .image = &boxImage,
     };
     mShop->rects->next = upgrade_button;
 
@@ -131,7 +124,7 @@ MS::MainScene::MainScene(SDL_Renderer *ren) :
         .x = 275, .y = 50,
         .w = 100, .h = 100,
         .r = 0x00, .g = 0xFF, .b = 0xFF, .a = 0x5F,
-        .image = &mTestImage,
+        .image = &boxImage,
     };
     mShop->rects->next->next = bottle_button;
 
@@ -140,29 +133,57 @@ MS::MainScene::MainScene(SDL_Renderer *ren) :
         .x = 400, .y = 50,
         .w = 100, .h = 100,
         .r = 0x00, .g = 0xFF, .b = 0xFF, .a = 0x5F,
-        .image = &mTestImage,
+        .image = &boxImage,
     };
     mShop->rects->next->next->next = load_doll_button;
 
     mGui->rects = new MS::Rectangle {
         .x = 10, .y = 502-50,
-        .w = 492, .h = 50,
+        .w = 196, .h = 50,
         .r = 0x77, .g = 0x77, .b = 0x77, .a = 0xFF,
         .image = nullptr,
     };
     mGui->rects->next = new MS::Rectangle {
         .x = 20, .y = 502-40 - 5,
-        .w = 492 - 20, .h = 50 - 10,
+        .w = 196 - 20, .h = 50 - 10,
         .r = 0x00, .g = 0x00, .b = 0x00, .a = 0xFF,
         .image = nullptr,
     };
 
     mGui->rects->next->next = new MS::Rectangle {
         .x = 20, .y = 502-40 - 5,
-        .w = int((492 - 20) * 0.0), .h = 50 - 10,
+        .w = int((196 - 20) * 0.0), .h = 50 - 10,
         .r = 0xff, .g = 0xff, .b = 0xff, .a = 0xFF,
         .image = nullptr,
     };
+
+    load_bar_bg = new MS::Rectangle;
+    *load_bar_bg = {
+        .x = 502-196, .y = 502 - 50,
+        .w = 196, .h = 50,
+        .r = 0x77, .g = 0x77, .b = 0x77, .a = 0x5F,
+        .image = nullptr,
+    };
+    mGui->rects->next->next->next = load_bar_bg;
+
+    load_bar_mg = new MS::Rectangle;
+    *load_bar_mg = {
+        .x = 492-176, .y =  502 - 45,
+        .w = 196-20, .h = 40,
+        .r = 0x00, .g = 0x00, .b = 0x00, .a = 0x5F,
+        .image = nullptr,
+    };
+    mGui->rects->next->next->next->next = load_bar_mg;
+
+    load_bar_fg = new MS::Rectangle;
+    *load_bar_fg = {
+        .x = 492-176, .y =  502 - 45,
+        .w = 0, .h = 40,
+        .r = 0xFF, .g = 0xFF, .b = 0xFF, .a = 0x5F,
+        .image = nullptr,
+    };
+    mGui->rects->next->next->next->next->next = load_bar_fg;
+    
 
     mPlayerArea->rects->next->x = (mPlayerArea->rects->w * (1 - player.x)) + mPlayerArea->rects->x;
     // mPlayerArea->rects->next->image = nullptr;
@@ -179,7 +200,7 @@ MS::Layer *MS::MainScene::frame() {
     pissing = kbState[SDL_SCANCODE_P];
     
     if (!pissing){
-        mBladderFilled += MS::dt / 45;
+        mBladderFilled += MS::dt / 25;
     } else {
         mBladderFilled -= MS::dt / 20;
         if (mBladderFilled < 0.0) {
@@ -193,7 +214,7 @@ MS::Layer *MS::MainScene::frame() {
             dead = true;
         }
     }
-    mGui->rects->next->next->w = int((492 - 20) * mBladderFilled);
+    if(mGui->rects->next->next->w < 176) mGui->rects->next->next->w = int((196 - 20) * mBladderFilled);
     bearzos.timeSinceBearzos += MS::dt;
     if (bearzos.timeSinceBearzos > bearzos.fluff_bearzos_countdown)
         bearzos_attack();
@@ -209,7 +230,7 @@ MS::Layer *MS::MainScene::frame() {
     }
     msX /= (float)divisor/512;
     msY /= (float)divisor/512;
-    
+
     if (kbState[SDL_SCANCODE_A] && !pissing) {
         mPlayerArea->rects->next->image = &playerImageNeutral;
         player.x += MS::dt;

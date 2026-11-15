@@ -49,6 +49,9 @@ namespace Miserable {
             Rectangle *load_doll_button; 
             Rectangle *bottle_button; 
             Rectangle *upgrade_button;
+            Rectangle *load_bar_bg;
+            Rectangle *load_bar_mg;
+            Rectangle *load_bar_fg;
             bool held_down = false;
             int height = 512;
             int width = 512;
@@ -63,8 +66,8 @@ namespace Miserable {
             struct {
                 // All of these are 0 - 1;
                 float x = 0.f;
-                // Negative if not loading or unloading respectively;
-                float loadingProgress = -1.f, unloadingProgress = -1.f;
+                float loadingProgress = 0.f;
+                float loadingSpeed = 15;
                 size_t nLoadingDolls = 0;
                 size_t nUnloadingDolls = 0;
                 int hp = 100;

@@ -280,7 +280,7 @@ MS::Layer *MS::MainScene::frame() {
         mPlayerArea->rects->next->x = (mPlayerArea->rects->w * (1 - player.x)) + mPlayerArea->rects->x;
     }
 
-    if (kbState[SDL_SCANCODE_SPACE]) {
+    if (kbState[SDL_SCANCODE_SPACE] && !pissing) {
         load_bar_fg->w = (176*mLoaded);
         if (player.x <= 0.1) { // loading
             mLoaded += MS::dt / loadTime;

@@ -286,10 +286,10 @@ MS::Layer *MS::MainScene::frame() {
 
     mPlayerArea->rects->next->y = 280 + 5*sin(SDL_GetTicks() / 200.0);
     if (!pissing || inventory.bottleCount.empty()){
-        mBladderFilled += MS::dt / 12;
+        mBladderFilled += MS::dt / 8;
 
     } else {
-        mBladderFilled -= MS::dt / 1.5;
+        mBladderFilled -= MS::dt / 2.2;
         if (mBladderFilled < 0.0) {
             mBladderFilled = 0.0;
         } else{

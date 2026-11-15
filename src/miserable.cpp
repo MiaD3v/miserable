@@ -52,6 +52,7 @@ int MS::Game::run() {
             mCurrentScene = mainScene.frame();
         } else {
             mCurrentScene = mainScene.next->frame();
+            gameOverScene.ChangeAliveText(mainScene.frameCount);
         }
         mRendererEngine.render(mCurrentScene);
 

@@ -15,6 +15,7 @@ namespace Miserable {
         public:
             bool dead = false;
             GameOverScene *next;
+            float frameCount;
 
             MainScene(SDL_Renderer *ren);
             Layer* frame();
@@ -111,7 +112,6 @@ namespace Miserable {
             float unloadMult = 1;
             float loadMult = 1;
 
-            float frameCount;
             float getReactionWindow();
             std::string getMoneyAsString(uint64_t money);
 

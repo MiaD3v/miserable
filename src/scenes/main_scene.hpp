@@ -57,6 +57,7 @@ namespace Miserable {
             Rectangle *load_bar_bg;
             Rectangle *load_bar_mg;
             Rectangle *load_bar_fg;
+            Rectangle *hp_display;
             bool held_down = false;
             int height = 512;
             int width = 512;
@@ -83,6 +84,7 @@ namespace Miserable {
             TTF_Font *mFont = nullptr;
 
             TTF_Text *moneyText = nullptr;
+            TTF_Text *hpText = nullptr;
 
             float mLoaded = 0.f;
 

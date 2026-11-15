@@ -87,7 +87,7 @@ MS::MainScene::MainScene(SDL_Renderer *ren) :
 
     mBoxes->rects = new MS::Rectangle;
     *mBoxes->rects = {
-        .x = 50, .y = 250,
+        .x = 20, .y = 300,
         .w = 100, .h = 100,
         .r = 0x28, .g = 0x28, .b = 0x28, .a = 0xff,
         .image = &boxImage,
@@ -185,6 +185,16 @@ MS::MainScene::MainScene(SDL_Renderer *ren) :
         .image = nullptr,
     };
     mGui->rects->next->next->next->next->next = load_bar_fg;
+
+    moneyText = TTF_CreateText(mTtfEngine, mFont, "100", sizeof("100") - 1);
+    hp_display = new MS::Rectangle;
+    *hp_display = {
+        .x = 236, .y =  502 - 45,
+        .w = 0, .h = 0,
+        .r = 0x00, .g = 0x00, .b = 0x00, .a = 0x5F,
+        .image = nullptr, .text = moneyText,
+    };
+    mGui->rects->next->next->next->next->next->next = hp_display;
     
 
     mPlayerArea->rects->next->x = (mPlayerArea->rects->w * (1 - player.x)) + mPlayerArea->rects->x;
@@ -263,6 +273,7 @@ MS::Layer *MS::MainScene::frame() {
     }
 
     if (kbState[SDL_SCANCODE_SPACE]) {
+        load_bar_fg->w = (176*mLoaded);
         if (player.x <= 0.1) { // loading
             mLoaded += MS::dt / loadTime;
             if (mLoaded > 1) mLoaded = 1;
@@ -276,7 +287,6 @@ MS::Layer *MS::MainScene::frame() {
 
             if (mLoaded < 0) mLoaded = 0;
         }
-        std::print(stderr, "loaded: {}\n", mLoaded);
     }
 
     if (msState == SDL_BUTTON_LEFT && !held_down){

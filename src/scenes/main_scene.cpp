@@ -27,6 +27,7 @@ MS::MainScene::MainScene(SDL_Renderer *ren) :
     mBearzos(new MS::Layer),
     mBoxes(new MS::Layer),
     mShop(new MS::Layer),
+    mGui(new MS::Layer),
     mTestImage("assets/BG.png", ren),
     playerImageNeutral("assets/Player Sprites/Player Char-neutral-flipped.png", ren),
     backgroundImage("assets/Backgrounds/warehouse stage 3.png", ren),
@@ -47,6 +48,7 @@ MS::MainScene::MainScene(SDL_Renderer *ren) :
     mBG->next = mBoxes;
     mBoxes->next = mPlayerArea;
     mPlayerArea->next = mShop;
+    mShop->next = mGui;
 
     mBearzos->rects = new MS::Rectangle{
         .x = 128, .y = 128,
@@ -131,6 +133,26 @@ MS::MainScene::MainScene(SDL_Renderer *ren) :
     };
     mShop->rects->next->next->next = load_doll_button;
 
+    mGui->rects = new MS::Rectangle {
+        .x = 10, .y = 502-50,
+        .w = 492, .h = 50,
+        .r = 0x77, .g = 0x77, .b = 0x77, .a = 0xFF,
+        .image = nullptr,
+    };
+    mGui->rects->next = new MS::Rectangle {
+        .x = 20, .y = 502-40 - 5,
+        .w = 492 - 20, .h = 50 - 10,
+        .r = 0x00, .g = 0x00, .b = 0x00, .a = 0xFF,
+        .image = nullptr,
+    };
+
+    mGui->rects->next->next = new MS::Rectangle {
+        .x = 20, .y = 502-40 - 5,
+        .w = int((492 - 20) * 0.0), .h = 50 - 10,
+        .r = 0xff, .g = 0xff, .b = 0xff, .a = 0xFF,
+        .image = nullptr,
+    };
+
     mPlayerArea->rects->next->x = (mPlayerArea->rects->w * (1 - player.x)) + mPlayerArea->rects->x;
     // mPlayerArea->rects->next->image = nullptr;
     // mPlayerArea->rects->next->r = 0x28;
@@ -149,12 +171,16 @@ MS::Layer *MS::MainScene::frame() {
         mBladderFilled += MS::dt / 45;
     } else {
         mBladderFilled -= MS::dt / 20;
+        if (mBladderFilled < 0.0) {
+            mBladderFilled = 0.0;
+        }
     }
     while (mBladderFilled > 1 + 1.f/45) {
         mBladderFilled -= (1.f / 45);
         if (decrementHealth(player.hp)) {
         }
     }
+    mGui->rects->next->next->w = int((492 - 20) * mBladderFilled);
     bearzos.timeSinceBearzos += MS::dt;
     if (bearzos.timeSinceBearzos > bearzos.fluff_bearzos_countdown)
         bearzos_attack();

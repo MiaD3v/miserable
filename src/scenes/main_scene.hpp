@@ -36,6 +36,7 @@ namespace Miserable {
             Layer *mBG = nullptr;
             Layer *mBoxes = nullptr;
             Layer *mShop = nullptr;
+            Layer *mGui = nullptr;
             Rectangle *unload_doll_button;
             Rectangle *load_doll_button; 
             Rectangle *bottle_button; 

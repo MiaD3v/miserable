@@ -246,7 +246,10 @@ MS::Layer *MS::MainScene::frame() {
         hpText = TTF_CreateText(mTtfEngine, mFont, c_hp_string, sizeof(hp_string) - 1);
         hp_display->text = hpText;
     }
-    if(mGui->rects->next->next->w < 176) mGui->rects->next->next->w = int((196 - 20) * mBladderFilled);
+    if(int((196 - 20) * mBladderFilled) < 176) 
+        mGui->rects->next->next->w = int((196 - 20) * mBladderFilled);
+    else
+        mGui->rects->next->next->w = 176;
     bearzos.timeSinceBearzos += MS::dt;
     if (bearzos.timeSinceBearzos > bearzos.fluff_bearzos_countdown)
         bearzos_attack();

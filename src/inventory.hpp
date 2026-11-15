@@ -8,23 +8,23 @@
 
 namespace Miserable {
     class Inventory : public std::vector<std::pair<Item, double>> {
-        uint64_t cents = 10000; //at 10000 for testing;
+        float cents = 1000;
         public:
-            std::queue<int> load_dolls; 
-            std::queue<int> unload_dolls;
-            int bottleCount = 0;
-            int dollyLevel = 0;
+            std::queue<float> load_dolls; 
+            std::queue<float> unload_dolls;
+            std::queue<float> bottleCount;
+            int dollyLevel = 1;
             int dollCost = 10;
-            int bottleCost = 10;
-            int upgradeCost = 10;
+            int bottleCost = 500;
+            int upgradeCost = 10000;
 
             explicit Inventory();
             uint64_t getMoney();
             bool charge(uint64_t);
-            void give_money(uint64_t);
+            void give_money(float);
             bool Buy_Bottle();
-            bool Buy_Load_Doll();
-            bool Buy_Unload_Doll();
+            bool Buy_Load_Doll(float);
+            bool Buy_Unload_Doll(float);
             bool Upgrade_Dolly();
 
         private:

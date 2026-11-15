@@ -6,6 +6,7 @@
 #include <format>
 #include "../deltatime.hpp"
 #include "../inventory.hpp"
+#include <cmath>
 
 namespace MS = Miserable;
 int getNextCountdown() {
@@ -222,16 +223,32 @@ MS::MainScene::MainScene(SDL_Renderer *ren) :
 }
 
 MS::Layer *MS::MainScene::frame() {
+    frameCount += MS::dt;
     int numKeys = 0;
     const bool *kbState = SDL_GetKeyboardState(&numKeys);
     pissing = kbState[SDL_SCANCODE_P];
-    
-    if (!pissing){
-        mBladderFilled += MS::dt / 20;
+    if(!inventory.unload_dolls.empty()){
+        if(inventory.unload_dolls.front() + 30 < frameCount){
+            inventory.unload_dolls.pop();
+            unloadMult = pow(0.85, inventory.unload_dolls.size());
+        }
+    }
+    if(!inventory.load_dolls.empty()){
+        if(inventory.load_dolls.front() + 10 < frameCount){
+            inventory.load_dolls.pop();
+            loadMult = pow(0.85, inventory.load_dolls.size());
+        }
+    }
+
+    if (!pissing || inventory.bottleCount.empty()){
+        mBladderFilled += MS::dt / 12;
     } else {
-        mBladderFilled -= MS::dt / 20;
+        mBladderFilled -= MS::dt / 8;
         if (mBladderFilled < 0.0) {
             mBladderFilled = 0.0;
+        } else{
+            inventory.bottleCount.front() -= MS::dt * 1.6;
+            if(inventory.bottleCount.front() <= 0) inventory.bottleCount.pop();
         }
     }
     while (mBladderFilled > 1 + 1.f/45) {
@@ -283,45 +300,46 @@ MS::Layer *MS::MainScene::frame() {
     if (kbState[SDL_SCANCODE_SPACE] && !pissing) {
         load_bar_fg->w = (176*mLoaded);
         if (player.x <= 0.1) { // loading
-            mLoaded += MS::dt / loadTime;
+            mLoaded += MS::dt / (loadTime * loadMult);
             if (mLoaded > 1) mLoaded = 1;
         } else if (player.x >= 0.9) { // un-loading
             float oldLoadScore = mLoaded;
-            mLoaded -= MS::dt / loadTime;
+            mLoaded -= MS::dt / (loadTime * unloadMult);
 
             float dif = oldLoadScore - mLoaded;
 
-            if (mLoaded > 0) inventory.give_money(dif * 5000);
-
+            if (mLoaded > 0) inventory.give_money(dif * moneyMult);
             if (mLoaded < 0) mLoaded = 0;
         }
     }
 
     if (msState == SDL_BUTTON_LEFT && !held_down){
         if(IsRectClicked(msX, msY, unload_doll_button)){
-            if(inventory.Buy_Unload_Doll()){
-                std::print(stderr, "bought doll\n");
+            if(inventory.Buy_Unload_Doll(frameCount)){
+                unloadMult = pow(0.85, inventory.unload_dolls.size());
+
             } else {
                 std::print(stderr, "Not Enough Money");
             };
         }
         if(IsRectClicked(msX, msY, bottle_button)){
             if(inventory.Buy_Bottle()){
-                std::print(stderr, "{}", inventory.bottleCount);
             } else {
                 std::print(stderr, "Not Enough Money");
             };
         }
         if(IsRectClicked(msX, msY, upgrade_button)){
             if(inventory.Upgrade_Dolly()){
-                std::print(stderr, "{}", inventory.dollyLevel);
+                moneyMult = 500 * (inventory.dollyLevel + 0.2);
+                loadTime = 7.5 * inventory.dollyLevel;
             } else {
                 std::print(stderr, "Not Enough Money");
             };
         }
         if(IsRectClicked(msX, msY, load_doll_button)){
-            if(inventory.Buy_Load_Doll()){
-                std::print(stderr, "Buy Doll");
+            if(inventory.Buy_Load_Doll(frameCount)){
+                loadMult = pow(0.85, inventory.load_dolls.size());
+                std::print(stderr, "{}", inventory.load_dolls.size());
             } else {
                 std::print(stderr, "Not Enough Money");
             };

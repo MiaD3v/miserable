@@ -90,6 +90,11 @@ namespace Miserable {
 
             float loadTime = 7.5f;
 
+            float moneyMult = 500;
+            float unloadMult = 1;
+            float loadMult = 1;
+
+            float frameCount;
             std::string getMoneyAsString(uint64_t money);
 
     };

@@ -40,6 +40,7 @@ namespace Miserable {
             Image jankBoxImage;
             Inventory inventory;
             Layer *mBearzos = nullptr;
+
             Layer *mBG = nullptr;
             Layer *mBoxes = nullptr;
             Layer *mShop = nullptr;
@@ -73,6 +74,10 @@ namespace Miserable {
             TTF_TextEngine *mTtfEngine = nullptr;
             TTF_Text *mTtfText = nullptr;
             TTF_Font *mFont = nullptr;
+
+            float mLoaded = 0.f;
+
+            float loadTime = 7.5f;
 
     };
 };

@@ -223,7 +223,18 @@ MS::Layer *MS::MainScene::frame() {
         if (player.x < 0) player.x = 0;
         mPlayerArea->rects->next->x = (mPlayerArea->rects->w * (1 - player.x)) + mPlayerArea->rects->x;
     }
-    
+
+    if (kbState[SDL_SCANCODE_SPACE]) {
+        if (player.x <= 0.1) { // loading
+            mLoaded += MS::dt / loadTime;
+            if (mLoaded > 1) mLoaded = 1;
+        } else if (player.x >= 0.9) { // un-loading
+            mLoaded -= MS::dt / loadTime;
+            if (mLoaded < 0) mLoaded = 0;
+        }
+        std::print(stderr, "loaded: {}\n", mLoaded);
+    }
+
     if (msState == SDL_BUTTON_LEFT && !held_down){
         if(IsRectClicked(msX, msY, unload_doll_button)){
             if(inventory.Buy_Unload_Doll()){

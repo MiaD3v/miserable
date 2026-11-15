@@ -28,6 +28,7 @@ MS::MainScene::MainScene(SDL_Renderer *ren) :
     mBoxes(new MS::Layer),
     mShop(new MS::Layer),
     mGui(new MS::Layer),
+    mJankBox(new MS::Layer),
     mTestImage("assets/BG.png", ren),
     playerImageNeutral("assets/Player Sprites/Player Char-neutral-flipped.png", ren),
     backgroundImage("assets/Backgrounds/warehouse stage 3.png", ren),
@@ -37,7 +38,8 @@ MS::MainScene::MainScene(SDL_Renderer *ren) :
     bearzosMadImage("assets/Stuff Bearzos Sprites/Stuff Bearzos- Scolding.png", ren),
     bearzosGladImage("assets/Stuff Bearzos Sprites/Stuff Bearzos- happy.png", ren),
     dollyImage("assets/programmer_art/dolly_prog_art.png", ren),
-    boxImage("assets/programmer_art/box_prog_art.png", ren)
+    boxImage("assets/programmer_art/box_prog_art.png", ren),
+    jankBoxImage("assets/Backgrounds/SecretFG.png", ren)
     {
     // mTtfEngine = TTF_CreateRendererTextEngine(ren);
     // mFont = TTF_OpenFont("assets/lazy_arie.ttf", 24.0);
@@ -47,7 +49,8 @@ MS::MainScene::MainScene(SDL_Renderer *ren) :
     mBG->next = mBoxes;
     mBoxes->next = mPlayerArea;
     mPlayerArea->next = mShop;
-    mShop->next = mGui;
+    mShop->next = mJankBox;
+    mJankBox->next = mGui;
 
     mBearzos->rects = new MS::Rectangle{
         .x = 128, .y = 128,
@@ -59,14 +62,14 @@ MS::MainScene::MainScene(SDL_Renderer *ren) :
     mPlayerArea->rects = new MS::Rectangle;
     *mPlayerArea->rects = {
         .x = mLoadOffset, .y = 400,
-        .w = 350, .h = 0,
+        .w = 300, .h = 0,
         .r = 0x28, .g = 0x28, .b = 0x28, .a = 0xff,
         .image = &dollyImage,
     };
     mPlayerArea->rects->next = new MS::Rectangle;
     *mPlayerArea->rects->next = {
-        .x = 300+mLoadOffset, .y = 375,
-        .w = 50, .h = 50,
+        .x = 300+mLoadOffset, .y = 275,
+        .w = 150, .h = 150,
         .r = 0xFF, .g = 0xFF, .b = 0xFF, .a = 0xff,
         .image = &playerImageNeutral,
     };
@@ -92,6 +95,14 @@ MS::MainScene::MainScene(SDL_Renderer *ren) :
         .w = 100, .h = 100,
         .r = 0x28, .g = 0x28, .b = 0x28, .a = 0xff,
         .image = &boxImage,
+    };
+
+    mJankBox->rects = new MS::Rectangle;
+    *mJankBox->rects = {
+        .x = 0, .y = 0,
+        .w = 512, .h = 512,
+        .r = 0x28, .g = 0x28, .b = 0x28, .a = 0xff,
+        .image = &jankBoxImage,
     };
 
     unload_doll_button = new MS::Rectangle;

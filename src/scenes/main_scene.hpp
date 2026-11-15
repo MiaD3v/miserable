@@ -36,12 +36,14 @@ namespace Miserable {
             Image bearzosMadImage;
             Image bearzosGladImage;
             Image boxImage;
+            Image jankBoxImage;
             Inventory inventory;
             Layer *mBearzos = nullptr;
             Layer *mBG = nullptr;
             Layer *mBoxes = nullptr;
             Layer *mShop = nullptr;
             Layer *mGui = nullptr;
+            Layer *mJankBox = nullptr;
             Rectangle *unload_doll_button;
             Rectangle *load_doll_button; 
             Rectangle *bottle_button; 
@@ -56,7 +58,7 @@ namespace Miserable {
                 bool pissing_seen = false;
                 float curtainCloseCooldown = 0.0;
             } bearzos;
-            double mLoadOffset = 112;
+            double mLoadOffset = 56;
             struct {
                 // All of these are 0 - 1;
                 float x = 0.f;

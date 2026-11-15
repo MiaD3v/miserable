@@ -6,7 +6,7 @@
 #include <SDL3/SDL.h>
 
 #include "../scene.hpp"
-#include "/game_over_screen.hpp"
+#include "game_over_screen.hpp"
 #include "../image.hpp"
 #include "../inventory.hpp"
 

@@ -26,7 +26,6 @@ MS::MainScene::MainScene(SDL_Renderer *ren) :
     dollyImage("assets/programmer_art/dolly_prog_art.png", ren),
     boxImage("assets/programmer_art/box_prog_art.png", ren)
     {
-
     // mTtfEngine = TTF_CreateRendererTextEngine(ren);
     // mFont = TTF_OpenFont("assets/lazy_arie.ttf", 24.0);
     // mTtfText = TTF_CreateText(mTtfEngine, mFont, "Test Text", sizeof("Test Text") - 1);
@@ -122,10 +121,12 @@ MS::MainScene::MainScene(SDL_Renderer *ren) :
 
 MS::Layer *MS::MainScene::frame() {
 
-    mBladderFilled += MS::dt / 45;
+    mBladderFilled += MS::dt / 1;
     while (mBladderFilled > 1 + 1.f/45) {
+        std::print(stderr, "{}", player.hp);
         mBladderFilled -= (1.f / 45);
         if (decrementHealth(player.hp)) {
+            dead = true;
         }
     }
 
@@ -157,9 +158,6 @@ MS::Layer *MS::MainScene::frame() {
     }
     
     if (msState == SDL_BUTTON_LEFT && !held_down){
-        std::print(stderr, "{},{}\n", msX, msY);
-        std::print(stderr, "{},{}\n", width, height);
-        std::print(stderr, "{},{}\n", divisor, offset);
         if(IsRectClicked(msX, msY, unload_doll_button)){
             if(inventory.Buy_Unload_Doll()){
                 std::print(stderr, "bought doll\n");

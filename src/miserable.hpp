@@ -1,3 +1,4 @@
+#pragma once
 #include <SDL3/SDL.h>
 #include "renderer.hpp"
 
@@ -12,6 +13,7 @@ namespace Miserable {
             SDL_Window *mWindow;
             SDL_Renderer *mRenderer;
             Renderer mRendererEngine;
+            Layer *mCurrentScene;
     };
 };
 

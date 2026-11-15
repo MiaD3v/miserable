@@ -41,6 +41,7 @@ add_executable(${PROJECT_NAME}
     src/deltatime.cpp
     src/image.cpp
     src/inventory.cpp
+    src/scenes/game_over_screen.cpp
 )
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL3::SDL3)
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL3_image::SDL3_image)

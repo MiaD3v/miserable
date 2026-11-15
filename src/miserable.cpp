@@ -4,6 +4,7 @@
 #include "panic.hpp"
 #include "deltatime.hpp"
 #include "scenes/main_scene.hpp"
+#include "scenes/game_over_screen.hpp"
 
 namespace MS = Miserable;
 
@@ -31,6 +32,9 @@ MS::Game::Game() {
 int MS::Game::run() {
 
     MS::MainScene mainScene(mRenderer);
+    MS::GameOverScene gameOverScene(mRenderer);
+    mainScene.next = &gameOverScene;
+    Layer *mCurrentScene = mainScene.frame();
 
     SDL_Event event;
     bool running = true;
@@ -43,8 +47,13 @@ int MS::Game::run() {
                 case SDL_EVENT_WINDOW_RESIZED: mainScene.Resize(event.window.data1, event.window.data2);
             }
         }
-
-        mRendererEngine.render(mainScene.frame());
+        
+        if(!mainScene.dead){
+            mCurrentScene = mainScene.frame();
+        } else {
+            mCurrentScene = mainScene.next->frame();
+        }
+        mRendererEngine.render(mCurrentScene);
 
     }
 

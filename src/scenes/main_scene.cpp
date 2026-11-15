@@ -314,13 +314,14 @@ MS::Layer *MS::MainScene::frame() {
         hpText = TTF_CreateText(mTtfEngine, mFont, c_hp_string, sizeof(hp_string) - 1);
         hp_display->text = hpText;
     }
-    if(int((196 - 20) * mBladderFilled) < 176) 
+if(int((196 - 20) * mBladderFilled) < 176) 
     mGui->rects->next->next->w = int((196 - 20) * mBladderFilled);
 else
-mGui->rects->next->next->w = 176;
+    mGui->rects->next->next->w = 176;
+
 bearzos.timeSinceBearzos += MS::dt;
 if (bearzos.timeSinceBearzos > bearzos.fluff_bearzos_countdown)
-bearzos_attack();
+    bearzos_attack();
 float msX = -1;
 float msY = -1;
 const SDL_MouseButtonFlags msState = SDL_GetMouseState(&msX, &msY);
@@ -436,8 +437,21 @@ bool MS::MainScene::IsRectClicked(float msX, float msY, MS::Rectangle *button){
 
 void MS::MainScene::bearzos_attack() {
     static float reactionWindow = 2.0;
-    if (bearzos.bearzosAttackStage >= 2) {
-        bearzos.pissing_seen = bearzos.pissing_seen || pissing;
+    if (bearzos.bearzosAttackStage >= 2 && bearzos.bearzosAttackStage != 3 && bearzos.bearzosAttackStage != 5) {
+        if (pissing) {
+            bearzos.bearzosAttackStage = 3;
+            mBearzos->rects->image = &bearzosMadImage;
+            for (int i = 0; i < 20; i++) {
+                if (decrementHealth(player.hp))
+                    dead = true;
+
+            }
+            TTF_DestroyText(hp_display->text);
+            std::string hp_string = std::format("{}", player.hp);
+            const char* c_hp_string = hp_string.c_str();
+            hpText = TTF_CreateText(mTtfEngine, mFont, c_hp_string, sizeof(hp_string) - 1);
+            hp_display->text = hpText;
+        }
     }
     if (bearzos.bearzosAttackStage == 0) {
         bearzos.bearzosAttackStage = 1;

@@ -171,13 +171,13 @@ MS::Layer *MS::MainScene::frame() {
     msX /= (float)divisor/512;
     msY /= (float)divisor/512;
     
-    if (kbState[SDL_SCANCODE_A]) {
+    if (kbState[SDL_SCANCODE_A] && !pissing) {
         player.x += MS::dt;
         if (player.x > 1) player.x = 1;
         mPlayerArea->rects->next->x = (mPlayerArea->rects->w * (1 - player.x)) + mPlayerArea->rects->x;
     }
 
-    if (kbState[SDL_SCANCODE_D]) {
+    if (kbState[SDL_SCANCODE_D] && !pissing) {
         player.x -= MS::dt;
         if (player.x < 0) player.x = 0;
         mPlayerArea->rects->next->x = (mPlayerArea->rects->w * (1 - player.x)) + mPlayerArea->rects->x;

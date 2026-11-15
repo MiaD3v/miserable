@@ -88,6 +88,9 @@ namespace Miserable {
                 size_t nUnloadingDolls = 0;
 
                 int hp = 100;
+
+
+
             } player;
 
             TTF_TextEngine *mTtfEngine = nullptr;

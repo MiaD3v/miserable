@@ -4,6 +4,7 @@
 #include <print>
 #include <SDL3/SDL.h>
 #include <cstdlib>
+#include <cmath>
 #include <format>
 #include "../deltatime.hpp"
 #include "../inventory.hpp"
@@ -77,7 +78,7 @@ MS::MainScene::MainScene(SDL_Renderer *ren) :
     };
     mPlayerArea->rects->next = new MS::Rectangle;
     *mPlayerArea->rects->next = {
-        .x = 300+mLoadOffset, .y = 275,
+        .x = 300+mLoadOffset, .y = 280 + 5*sin(SDL_GetTicks() / 200.0),
         .w = 150, .h = 150,
         .r = 0xFF, .g = 0xFF, .b = 0xFF, .a = 0xff,
         .image = &playerImageNeutral,
@@ -265,6 +266,7 @@ MS::Layer *MS::MainScene::frame() {
     int numKeys = 0;
     const bool *kbState = SDL_GetKeyboardState(&numKeys);
     pissing = kbState[SDL_SCANCODE_P];
+
     if(!inventory.unload_dolls.empty()){
         if(inventory.unload_dolls.front() + 30 < frameCount){
             inventory.unload_dolls.pop();
@@ -281,9 +283,11 @@ MS::Layer *MS::MainScene::frame() {
             ldoll_display->text = IntToTTF(inventory.load_dolls.size());
         }
     }
-    
+
+    mPlayerArea->rects->next->y = 280 + 5*sin(SDL_GetTicks() / 200.0);
     if (!pissing || inventory.bottleCount.empty()){
         mBladderFilled += MS::dt / 12;
+
     } else {
         mBladderFilled -= MS::dt / 1.5;
         if (mBladderFilled < 0.0) {

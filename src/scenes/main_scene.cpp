@@ -1,5 +1,6 @@
 #include "../renderer.hpp"
 #include "main_scene.hpp"
+#include <SDL3/SDL_scancode.h>
 #include <print>
 #include <SDL3/SDL.h>
 #include <cstdlib>
@@ -280,7 +281,7 @@ MS::Layer *MS::MainScene::frame() {
             ldoll_display->text = IntToTTF(inventory.load_dolls.size());
         }
     }
-
+    
     if (!pissing || inventory.bottleCount.empty()){
         mBladderFilled += MS::dt / 12;
     } else {
@@ -309,114 +310,119 @@ MS::Layer *MS::MainScene::frame() {
         hp_display->text = hpText;
     }
     if(int((196 - 20) * mBladderFilled) < 176) 
-        mGui->rects->next->next->w = int((196 - 20) * mBladderFilled);
-    else
-        mGui->rects->next->next->w = 176;
-    bearzos.timeSinceBearzos += MS::dt;
-    if (bearzos.timeSinceBearzos > bearzos.fluff_bearzos_countdown)
-        bearzos_attack();
-    float msX = -1;
-    float msY = -1;
-    const SDL_MouseButtonFlags msState = SDL_GetMouseState(&msX, &msY);
-    float divisor = std::min(width, height);
-    float offset = (std::max(width, height) - std::min(width, height))/2.0;
-    if(width == std::max(width, height)){
-        msX -= offset;
-    } else{
-        msY -= offset;
+    mGui->rects->next->next->w = int((196 - 20) * mBladderFilled);
+else
+mGui->rects->next->next->w = 176;
+bearzos.timeSinceBearzos += MS::dt;
+if (bearzos.timeSinceBearzos > bearzos.fluff_bearzos_countdown)
+bearzos_attack();
+float msX = -1;
+float msY = -1;
+const SDL_MouseButtonFlags msState = SDL_GetMouseState(&msX, &msY);
+float divisor = std::min(width, height);
+float offset = (std::max(width, height) - std::min(width, height))/2.0;
+if(width == std::max(width, height)){
+    msX -= offset;
+} else{
+    msY -= offset;
+}
+msX /= (float)divisor/512;
+msY /= (float)divisor/512;
+
+if (kbState[SDL_SCANCODE_A] && !pissing) {
+    mPlayerArea->rects->next->image = &playerImageNeutral;
+    player.x += MS::dt;
+    if (player.x > 1) player.x = 1;
+    mPlayerArea->rects->next->x = (mPlayerArea->rects->w * (1 - player.x)) + mPlayerArea->rects->x;
+}
+
+if (kbState[SDL_SCANCODE_D] && !pissing) {
+    mPlayerArea->rects->next->image = &playerImageRight;
+    player.x -= MS::dt;
+    if (player.x < 0) player.x = 0;
+    mPlayerArea->rects->next->x = (mPlayerArea->rects->w * (1 - player.x)) + mPlayerArea->rects->x;
+}
+
+if (kbState[SDL_SCANCODE_SPACE] && !pissing) {
+    load_bar_fg->w = (176*mLoaded);
+    if (player.x <= 0.1) { // loading
+        mLoaded += MS::dt / (loadTime * loadMult);
+        if (mLoaded > 1) mLoaded = 1;
+    } else if (player.x >= 0.9) { // un-loading
+        float oldLoadScore = mLoaded;
+        mLoaded -= MS::dt / (loadTime * unloadMult);
+        
+        float dif = oldLoadScore - mLoaded;
+        
+        if (mLoaded > 0) inventory.give_money(dif * moneyMult);
+        if (mLoaded < 0) mLoaded = 0;
     }
-    msX /= (float)divisor/512;
-    msY /= (float)divisor/512;
+}
 
-    if (kbState[SDL_SCANCODE_A] && !pissing) {
-        mPlayerArea->rects->next->image = &playerImageNeutral;
-        player.x += MS::dt;
-        if (player.x > 1) player.x = 1;
-        mPlayerArea->rects->next->x = (mPlayerArea->rects->w * (1 - player.x)) + mPlayerArea->rects->x;
+if (true){
+    if((msState == SDL_BUTTON_LEFT && !held_down && IsRectClicked(msX, msY, unload_doll_button)) || (kbState[SDL_SCANCODE_1] && !upgradeHotkeysHeld[0])){
+        if(inventory.Buy_Unload_Doll(frameCount)){
+            unloadMult = pow(0.85, inventory.unload_dolls.size());
+            TTF_DestroyText(udoll_display->text);
+            udoll_display->text = IntToTTF(inventory.unload_dolls.size());
+        } else {
+            std::print(stderr, "Not Enough Money");
+        };
     }
-
-    if (kbState[SDL_SCANCODE_D] && !pissing) {
-        mPlayerArea->rects->next->image = &playerImageRight;
-        player.x -= MS::dt;
-        if (player.x < 0) player.x = 0;
-        mPlayerArea->rects->next->x = (mPlayerArea->rects->w * (1 - player.x)) + mPlayerArea->rects->x;
+    if((msState == SDL_BUTTON_LEFT && !held_down && IsRectClicked(msX, msY, bottle_button)) || (kbState[SDL_SCANCODE_3] && !upgradeHotkeysHeld[2])){
+        if(inventory.Buy_Bottle()){
+            TTF_DestroyText(bottle_display->text);
+            bottle_display->text = IntToTTF(inventory.bottleCount.size());
+        } else {
+            std::print(stderr, "Not Enough Money");
+        };
     }
-
-    if (kbState[SDL_SCANCODE_SPACE] && !pissing) {
-        load_bar_fg->w = (176*mLoaded);
-        if (player.x <= 0.1) { // loading
-            mLoaded += MS::dt / (loadTime * loadMult);
-            if (mLoaded > 1) mLoaded = 1;
-        } else if (player.x >= 0.9) { // un-loading
-            float oldLoadScore = mLoaded;
-            mLoaded -= MS::dt / (loadTime * unloadMult);
-
-            float dif = oldLoadScore - mLoaded;
-
-            if (mLoaded > 0) inventory.give_money(dif * moneyMult);
-            if (mLoaded < 0) mLoaded = 0;
-        }
+    if((msState == SDL_BUTTON_LEFT && !held_down && IsRectClicked(msX, msY, upgrade_button)) || (kbState[SDL_SCANCODE_2] && !upgradeHotkeysHeld[1])){
+        if(inventory.Upgrade_Dolly()){
+            moneyMult = 500 * (inventory.dollyLevel + 0.2);
+            loadTime = 7.5 * inventory.dollyLevel;
+            TTF_DestroyText(level_display->text);
+            level_display->text = IntToTTF(inventory.dollyLevel);
+        } else {
+            std::print(stderr, "Not Enough Money");
+        };
     }
-
-    if (msState == SDL_BUTTON_LEFT && !held_down){
-        if(IsRectClicked(msX, msY, unload_doll_button)){
-            if(inventory.Buy_Unload_Doll(frameCount)){
-                unloadMult = pow(0.85, inventory.unload_dolls.size());
-                TTF_DestroyText(udoll_display->text);
-                udoll_display->text = IntToTTF(inventory.unload_dolls.size());
-            } else {
-                std::print(stderr, "Not Enough Money");
-            };
-        }
-        if(IsRectClicked(msX, msY, bottle_button)){
-            if(inventory.Buy_Bottle()){
-                TTF_DestroyText(bottle_display->text);
-                bottle_display->text = IntToTTF(inventory.bottleCount.size());
-            } else {
-                std::print(stderr, "Not Enough Money");
-            };
-        }
-        if(IsRectClicked(msX, msY, upgrade_button)){
-            if(inventory.Upgrade_Dolly()){
-                moneyMult = 500 * (inventory.dollyLevel + 0.2);
-                loadTime = 7.5 * inventory.dollyLevel;
-                TTF_DestroyText(level_display->text);
-                level_display->text = IntToTTF(inventory.dollyLevel);
-            } else {
-                std::print(stderr, "Not Enough Money");
-            };
-        }
-        if(IsRectClicked(msX, msY, load_doll_button)){
-            if(inventory.Buy_Load_Doll(frameCount)){
-                loadMult = pow(0.85, inventory.load_dolls.size());
-                TTF_DestroyText(ldoll_display->text);
-                ldoll_display->text = IntToTTF(inventory.load_dolls.size());
-                std::print(stderr, "{}", inventory.load_dolls.size());
-            } else {
-                std::print(stderr, "Not Enough Money");
-            };
-        }
-        held_down = true;
+    if((msState == SDL_BUTTON_LEFT && !held_down && IsRectClicked(msX, msY, load_doll_button)) || (kbState[SDL_SCANCODE_4] && !upgradeHotkeysHeld[3])){
+        if(inventory.Buy_Load_Doll(frameCount)){
+            loadMult = pow(0.85, inventory.load_dolls.size());
+            TTF_DestroyText(ldoll_display->text);
+            ldoll_display->text = IntToTTF(inventory.load_dolls.size());
+            std::print(stderr, "{}", inventory.load_dolls.size());
+        } else {
+            std::print(stderr, "Not Enough Money");
+        };
     }
-    if (!msState){
-        held_down = false;
-    }
+    held_down = true;
 
-    {
-        TTF_DestroyText(mGui->next->rects->next->next->text);
-        std::string moneyStr = getMoneyAsString(inventory.getMoney());
-        moneyText = TTF_CreateText(mTtfEngine, mFont, moneyStr.c_str(), moneyStr.length());
-        mGui->next->rects->next->next->text = moneyText;
-    }
+    upgradeHotkeysHeld[0] = kbState[SDL_SCANCODE_1];
+    upgradeHotkeysHeld[1] = kbState[SDL_SCANCODE_2];
+    upgradeHotkeysHeld[2] = kbState[SDL_SCANCODE_3];
+    upgradeHotkeysHeld[3] = kbState[SDL_SCANCODE_4];
+}
+if (!msState){
+    held_down = false;
+}
+
+{
+    TTF_DestroyText(mGui->next->rects->next->next->text);
+    std::string moneyStr = getMoneyAsString(inventory.getMoney());
+    moneyText = TTF_CreateText(mTtfEngine, mFont, moneyStr.c_str(), moneyStr.length());
+    mGui->next->rects->next->next->text = moneyText;
+}
 
 
-    return mBearzos;
+return mBearzos;
 }
 
 void MS::MainScene::Resize(int w, int h) {
     width = w;
     height = h;
-
+    
 }
 
 bool MS::MainScene::IsRectClicked(float msX, float msY, MS::Rectangle *button){

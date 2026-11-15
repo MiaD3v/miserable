@@ -66,6 +66,7 @@ namespace Miserable {
             Rectangle *ldoll_display;
             Rectangle *bottle_display;
             Rectangle *level_display;
+            bool upgradeHotkeysHeld[4] = {false, false, false, false};
             
             bool held_down = false;
             int height = 512;

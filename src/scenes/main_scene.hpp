@@ -21,6 +21,7 @@ namespace Miserable {
             void Resize(int w, int h);
             bool IsRectClicked(float msX, float msY, Rectangle *button);
             void bearzos_attack();
+            TTF_Text* IntToTTF(int);
             ~MainScene();
         private:
 
@@ -58,6 +59,10 @@ namespace Miserable {
             Rectangle *load_bar_mg;
             Rectangle *load_bar_fg;
             Rectangle *hp_display;
+            Rectangle *udoll_display;
+            Rectangle *ldoll_display;
+            Rectangle *bottle_display;
+            Rectangle *level_display;
             bool held_down = false;
             int height = 512;
             int width = 512;
@@ -85,6 +90,10 @@ namespace Miserable {
 
             TTF_Text *moneyText = nullptr;
             TTF_Text *hpText = nullptr;
+            TTF_Text *ldollText = nullptr;
+            TTF_Text *udollText = nullptr;
+            TTF_Text *bottleText = nullptr;
+            TTF_Text *levelText = nullptr;
 
             float mLoaded = 0.f;
 

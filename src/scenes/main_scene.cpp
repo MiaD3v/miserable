@@ -56,6 +56,7 @@ MS::MainScene::MainScene(SDL_Renderer *ren) :
     mShop->next = mJankBox;
     mJankBox->next = mGui;
 
+
     mBearzos->rects = new MS::Rectangle{
         .x = 128, .y = 128,
         .w = 256, .h = 256,
@@ -135,10 +136,50 @@ MS::MainScene::MainScene(SDL_Renderer *ren) :
     *load_doll_button = {
         .x = 400, .y = 50,
         .w = 100, .h = 100,
-        .r = 0x00, .g = 0xFF, .b = 0xFF, .a = 0x5F,
+        .r = 0xFF, .g = 0xFF, .b = 0xFF, .a = 0xAF,
         .image = &boxImage,
     };
     mShop->rects->next->next->next = load_doll_button;
+
+    udollText = TTF_CreateText(mTtfEngine, mFont, "0", sizeof("0") - 1);
+    udoll_display = new MS::Rectangle;
+    *udoll_display = {
+        .x = 25, .y = 135,
+        .w = 100, .h = 100,
+        .r = 0xFF, .g = 0xFF, .b = 0xFF, .a = 0xAF,
+        .image = nullptr, .text = udollText,
+    };
+    mShop->rects->next->next->next->next = udoll_display;
+    
+    ldollText = TTF_CreateText(mTtfEngine, mFont, "0", sizeof("0") - 1);
+    ldoll_display = new MS::Rectangle;
+    *ldoll_display = {
+        .x = 400, .y = 135,
+        .w = 1, .h = 1,
+        .r = 0xFF, .g = 0xFF, .b = 0xFF, .a = 0xAF,
+        .image = nullptr, .text = ldollText,
+    };
+    mShop->rects->next->next->next->next->next = ldoll_display;
+
+    levelText = TTF_CreateText(mTtfEngine, mFont, "0", sizeof("0") - 1);
+    level_display = new MS::Rectangle;
+    *level_display = {
+        .x = 150, .y = 135,
+        .w = 100, .h = 100,
+        .r = 0xFF, .g = 0xFF, .b = 0xFF, .a = 0xAF,
+        .image = nullptr, .text = levelText,
+    };
+    mShop->rects->next->next->next->next->next->next = level_display;
+
+    bottleText = TTF_CreateText(mTtfEngine, mFont, "0", sizeof("0") - 1);
+    bottle_display = new MS::Rectangle;
+    *bottle_display = {
+        .x = 275, .y = 135,
+        .w = 100, .h = 100,
+        .r = 0xFF, .g = 0xFF, .b = 0xFF, .a = 0xAF,
+        .image = nullptr, .text = bottleText,
+    };
+    mShop->rects->next->next->next->next->next->next->next = bottle_display;
 
     mGui->rects = new MS::Rectangle {
         .x = 10, .y = 502-50,
@@ -231,12 +272,16 @@ MS::Layer *MS::MainScene::frame() {
         if(inventory.unload_dolls.front() + 30 < frameCount){
             inventory.unload_dolls.pop();
             unloadMult = pow(0.85, inventory.unload_dolls.size());
+            TTF_DestroyText(udoll_display->text);
+            udoll_display->text = IntToTTF(inventory.unload_dolls.size());
         }
     }
     if(!inventory.load_dolls.empty()){
-        if(inventory.load_dolls.front() + 10 < frameCount){
+        if(inventory.load_dolls.front() + 30 < frameCount){
             inventory.load_dolls.pop();
             loadMult = pow(0.85, inventory.load_dolls.size());
+            TTF_DestroyText(ldoll_display->text);
+            ldoll_display->text = IntToTTF(inventory.load_dolls.size());
         }
     }
 
@@ -248,7 +293,11 @@ MS::Layer *MS::MainScene::frame() {
             mBladderFilled = 0.0;
         } else{
             inventory.bottleCount.front() -= MS::dt * 1.6;
-            if(inventory.bottleCount.front() <= 0) inventory.bottleCount.pop();
+            if(inventory.bottleCount.front() <= 0) {
+                inventory.bottleCount.pop();
+                TTF_DestroyText(bottle_display->text);
+                bottle_display->text = IntToTTF(inventory.bottleCount.size());
+            }
         }
     }
     while (mBladderFilled > 1 + 1.f/45) {
@@ -317,13 +366,16 @@ MS::Layer *MS::MainScene::frame() {
         if(IsRectClicked(msX, msY, unload_doll_button)){
             if(inventory.Buy_Unload_Doll(frameCount)){
                 unloadMult = pow(0.85, inventory.unload_dolls.size());
-
+                TTF_DestroyText(udoll_display->text);
+                udoll_display->text = IntToTTF(inventory.unload_dolls.size());
             } else {
                 std::print(stderr, "Not Enough Money");
             };
         }
         if(IsRectClicked(msX, msY, bottle_button)){
             if(inventory.Buy_Bottle()){
+                TTF_DestroyText(bottle_display->text);
+                bottle_display->text = IntToTTF(inventory.bottleCount.size());
             } else {
                 std::print(stderr, "Not Enough Money");
             };
@@ -332,6 +384,8 @@ MS::Layer *MS::MainScene::frame() {
             if(inventory.Upgrade_Dolly()){
                 moneyMult = 500 * (inventory.dollyLevel + 0.2);
                 loadTime = 7.5 * inventory.dollyLevel;
+                TTF_DestroyText(level_display->text);
+                level_display->text = IntToTTF(inventory.dollyLevel);
             } else {
                 std::print(stderr, "Not Enough Money");
             };
@@ -339,6 +393,8 @@ MS::Layer *MS::MainScene::frame() {
         if(IsRectClicked(msX, msY, load_doll_button)){
             if(inventory.Buy_Load_Doll(frameCount)){
                 loadMult = pow(0.85, inventory.load_dolls.size());
+                TTF_DestroyText(ldoll_display->text);
+                ldoll_display->text = IntToTTF(inventory.load_dolls.size());
                 std::print(stderr, "{}", inventory.load_dolls.size());
             } else {
                 std::print(stderr, "Not Enough Money");
@@ -412,6 +468,13 @@ std::string MS::MainScene::getMoneyAsString(uint64_t money) {
     // Don't worry about it!
     return std::format("${}.{}{}", dollars, cents/10, cents % 10);
 
+}
+
+TTF_Text* MS::MainScene::IntToTTF(int i){
+    std::string i_string = std::format("{}", i);
+    const char* c_i_string = i_string.c_str();
+    TTF_Text *iText = TTF_CreateText(mTtfEngine, mFont, c_i_string, sizeof(c_i_string) - 1);
+    return iText;
 }
 
 MS::MainScene::~MainScene() {

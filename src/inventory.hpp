@@ -16,7 +16,7 @@ namespace Miserable {
             int dollyLevel = 1;
             int dollCost = 10;
             int bottleCost = 500;
-            int upgradeCost = 10000;
+            int upgradeCost = 10;
 
             explicit Inventory();
             uint64_t getMoney();

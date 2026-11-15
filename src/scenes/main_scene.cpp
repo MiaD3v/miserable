@@ -43,6 +43,9 @@ MS::MainScene::MainScene(SDL_Renderer *ren) :
     bearzosGladImage("assets/Stuff Bearzos Sprites/Stuff Bearzos- happy.png", ren),
     dollyImage("assets/programmer_art/dolly_prog_art.png", ren),
     boxImage("assets/programmer_art/box_prog_art.png", ren),
+    upgradeImage("assets/buttons/upgrade.png", ren),
+    dollImage("assets/buttons/Doll.png", ren),
+    bottleImage("assets/buttons/Lint.png", ren),
     jankBoxImage("assets/Backgrounds/SecretFG.png", ren)
     {
 
@@ -87,13 +90,6 @@ MS::MainScene::MainScene(SDL_Renderer *ren) :
         .image = &backgroundImage,
     };
 
-    mBoxes->rects = new MS::Rectangle;
-    *mBoxes->rects = {
-        .x = 20, .y = 300,
-        .w = 100, .h = 100,
-        .r = 0x28, .g = 0x28, .b = 0x28, .a = 0xff,
-        .image = &boxImage,
-    };
 
     mJankBox->rects = new MS::Rectangle;
     *mJankBox->rects = {
@@ -106,18 +102,18 @@ MS::MainScene::MainScene(SDL_Renderer *ren) :
     unload_doll_button = new MS::Rectangle;
     *unload_doll_button = {
         .x = 25, .y = 50,
-        .w = 100, .h = 100,
+        .w = 70, .h = 70,
         .r = 0x00, .g = 0xFF, .b = 0xFF, .a = 0x5F,
-        .image = &boxImage,
+        .image = &dollImage,
     };
     mShop->rects = unload_doll_button;
 
     upgrade_button = new MS::Rectangle;
     *upgrade_button = {
-        .x = 150, .y = 50,
-        .w = 100, .h = 100,
+        .x = 155, .y = 50,
+        .w = 70, .h = 70,
         .r = 0x00, .g = 0xFF, .b = 0xFF, .a = 0x5F,
-        .image = &boxImage,
+        .image = &upgradeImage,
     };
     mShop->rects->next = upgrade_button;
 
@@ -125,28 +121,28 @@ MS::MainScene::MainScene(SDL_Renderer *ren) :
 
     *bottle_button = {
 
-        .x = 275, .y = 50,
-        .w = 100, .h = 100,
-        .r = 0x00, .g = 0xFF, .b = 0xFF, .a = 0x5F,
-        .image = &boxImage,
+        .x = 285, .y = 50,
+        .w = 70, .h = 70,
+        .r = 0x28, .g = 0x28, .b = 0x28, .a = 0xFF,
+        .image = &bottleImage,
     };
     mShop->rects->next->next = bottle_button;
 
     load_doll_button = new MS::Rectangle;
     *load_doll_button = {
-        .x = 400, .y = 50,
-        .w = 100, .h = 100,
-        .r = 0xFF, .g = 0xFF, .b = 0xFF, .a = 0xAF,
-        .image = &boxImage,
+        .x = 512 - 95, .y = 50,
+        .w = 70, .h = 70,
+        .r = 0x28, .g = 0x28, .b = 0x28, .a = 0xFF,
+        .image = &dollImage,
     };
     mShop->rects->next->next->next = load_doll_button;
 
     udollText = TTF_CreateText(mTtfEngine, mFont, "0", sizeof("0") - 1);
     udoll_display = new MS::Rectangle;
     *udoll_display = {
-        .x = 25, .y = 135,
+        .x = 80, .y = 118,
         .w = 100, .h = 100,
-        .r = 0xFF, .g = 0xFF, .b = 0xFF, .a = 0xAF,
+        .r = 0xFF, .g = 0xFF, .b = 0xFF, .a = 0xfF,
         .image = nullptr, .text = udollText,
     };
     mShop->rects->next->next->next->next = udoll_display;
@@ -154,19 +150,19 @@ MS::MainScene::MainScene(SDL_Renderer *ren) :
     ldollText = TTF_CreateText(mTtfEngine, mFont, "0", sizeof("0") - 1);
     ldoll_display = new MS::Rectangle;
     *ldoll_display = {
-        .x = 400, .y = 135,
+        .x = 512-40, .y = 118,
         .w = 1, .h = 1,
-        .r = 0xFF, .g = 0xFF, .b = 0xFF, .a = 0xAF,
+        .r = 0xFF, .g = 0xFF, .b = 0xFF, .a = 0xFF,
         .image = nullptr, .text = ldollText,
     };
     mShop->rects->next->next->next->next->next = ldoll_display;
 
-    levelText = TTF_CreateText(mTtfEngine, mFont, "0", sizeof("0") - 1);
+    levelText = TTF_CreateText(mTtfEngine, mFont, "1", sizeof("1") - 1);
     level_display = new MS::Rectangle;
     *level_display = {
-        .x = 150, .y = 135,
+        .x = 210, .y = 118,
         .w = 100, .h = 100,
-        .r = 0xFF, .g = 0xFF, .b = 0xFF, .a = 0xAF,
+        .r = 0xFF, .g = 0xFF, .b = 0xFF, .a = 0xFF,
         .image = nullptr, .text = levelText,
     };
     mShop->rects->next->next->next->next->next->next = level_display;
@@ -174,9 +170,9 @@ MS::MainScene::MainScene(SDL_Renderer *ren) :
     bottleText = TTF_CreateText(mTtfEngine, mFont, "0", sizeof("0") - 1);
     bottle_display = new MS::Rectangle;
     *bottle_display = {
-        .x = 275, .y = 135,
+        .x = 340, .y = 118,
         .w = 100, .h = 100,
-        .r = 0xFF, .g = 0xFF, .b = 0xFF, .a = 0xAF,
+        .r = 0xFF, .g = 0xFF, .b = 0xFF, .a = 0xFF,
         .image = nullptr, .text = bottleText,
     };
     mShop->rects->next->next->next->next->next->next->next = bottle_display;

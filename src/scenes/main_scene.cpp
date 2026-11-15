@@ -126,9 +126,7 @@ MS::Layer *MS::MainScene::frame() {
     while (mBladderFilled > 1 + 1.f/45) {
         mBladderFilled -= (1.f / 45);
         if (decrementHealth(player.hp)) {
-            std::print("YOU DIED!\n");
         }
-        std::print(stderr, "hp: {}\n", player.hp);
     }
 
     int numKeys = 0;
@@ -138,13 +136,14 @@ MS::Layer *MS::MainScene::frame() {
     const SDL_MouseButtonFlags msState = SDL_GetMouseState(&msX, &msY);
     float divisor = std::min(width, height);
     float offset = (std::max(width, height) - std::min(width, height))/2;
-    msX /= (float)divisor/512;
-    msY /= (float)divisor/512;
     if(width == std::max(width, height)){
         msX -= offset;
     } else{
         msY -= offset;
     }
+    msX /= (float)divisor/512;
+    msY /= (float)divisor/512;
+    
     if (kbState[SDL_SCANCODE_A]) {
         player.x += MS::dt;
         if (player.x > 1) player.x = 1;
